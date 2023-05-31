@@ -1,13 +1,16 @@
 ---
+import { SITE_AUTHOR } from '../consts'
 const today = new Date();
 ---
 
 <footer>
-	&copy; {today.getFullYear()} YOUR NAME HERE. All rights reserved.
+	&copy; {today.getFullYear()} {SITE_AUTHOR}. All rights reserved.
 </footer>
 <style>
 	footer {
-		padding: 25px;
+		color: var(--text-subtitle);
+		font-size: 14px;
+    	line-height: 54px;
 		text-align: center;
 	}
 </style>

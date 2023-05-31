@@ -1,0 +1,60 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  sectionClass?: string;
+}
+
+const { id, title, sectionClass = '' } = Astro.props;
+---
+
+<section id={id} class={sectionClass + ' flex justify-center items-center min-h-screen'}>
+    <div class="relative isolate pt-16 wrapper text-center">
+        <div class="section-header">
+            <span class="title-bar"></span>
+            <h1 class="section-title">{title}</h1>
+        </div>
+        <slot />
+    </div>
+
+    <style>
+        .section-header {
+            padding-bottom: 40px;
+        }
+
+        .title-bar {
+            background-color: var(--text-subtitle);
+            display: block;
+            height: 1px;
+            margin: 0 auto 12px auto;
+            width: 60px;
+        }
+
+        .section-title {
+            color: var(--text-subtitle);
+            letter-spacing: 2px;
+            font-size: 20px;
+            line-height: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        /* between 768px and 979px */
+        @media (min-width: 768px) and (max-width: 979px) {
+            .section-title {
+                font-size: 18px;
+                line-height: 18px;
+            }
+        }
+
+        /* 767px or less */
+        @media (max-width: 767px) {
+            .section-title {
+                font-size: 16px;
+                line-height: 16px;
+            }
+        }
+    </style>
+</section>
