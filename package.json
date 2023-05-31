@@ -20,6 +20,7 @@
     "astro": "^2.5.5",
     "astro-seo": "^0.7.2",
     "framer-motion": "^10.12.16",
+    "hamburger-react": "^2.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.4.3",

@@ -7,14 +7,24 @@
     margin: auto;
     grid-template-columns: 40% 60%;
     background-color: var(--decoration);
-    background-image: -webkit-linear-gradient(-15deg, var(--decoration) 40%, rgb(25,25,25) 40%);
+    background-image: -webkit-linear-gradient(-15deg, var(--decoration) 40%, var(--border) 40%);
+    /*box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;*/
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
-#contacts .container svg {
-    fill: var(--background);
+#contacts .container div svg {
+    fill: var(--border);
     width: 40%;
     height: 100%;
     margin: auto;
+}
+
+#contacts .container ul svg {
+    fill: var(--text-off);
+    margin: 0;
+    padding: 0;
+    width: 21px;
+    height: auto;
 }
 
 @media (max-width: 767px) {
@@ -26,13 +36,13 @@
 
     #contacts .container {
         grid-template-columns: 1fr;
-        grid-template-rows: 40% 60%;
+        grid-template-rows: 35% 65%;
         padding: 0;
         background-color: var(--decoration);
-        background-image: -webkit-linear-gradient(-90deg, var(--decoration) 40%, rgb(25,25,25) 40%);
+        background-image: -webkit-linear-gradient(-90deg, var(--decoration) 35%, rgb(35,35,35) 35%);
     }
 
-    #contacts .container svg {
+    #contacts .container div svg {
         width: 25%;
         padding: 1.5rem 0;
     }

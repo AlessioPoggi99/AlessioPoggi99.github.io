@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
+import { motion } from "framer-motion";
+import { Squash as Hamburger } from 'hamburger-react'
+
 import { SITE_AUTHOR } from '../consts';
 import '../styles/header.css';
 
@@ -80,8 +83,66 @@ export default function Header() {
 							</li>
 						)}
 					</ul>
+					<MobileMenu menuLinks={menuLinks} isHomePage={isHomePage} />
 				</div>
 			</nav>
 		</header>
+	)
+}
+
+function MobileMenu({ menuLinks, isHomePage }) {
+
+	const [isOpen, setOpen] = useState(false)
+
+	const menu = {
+        hidden: { scale: 0, transition: { delay: 0.15, } },
+        visible: {
+			scale: 1,
+			transition: {
+				type: "spring",
+				duration: 0.4,
+				delayChildren: 0.2,
+				staggerChildren: 0.05,
+			},
+        },
+    }
+      
+    const item = {
+        hidden: { x: -16, opacity: 0 },
+        visible: { x: 0, opacity: 1 },
+		transition: { opacity: { duration: 0.2 } },
+    }
+
+	return (
+		<div id="nav-mobile-menu">
+			<Hamburger size={20} toggled={isOpen} toggle={setOpen} />
+			{isOpen ? <div class="bg-menu-layer" onClick={() => setOpen(false)}></div> : ''}
+			<motion.ul
+				animate={isOpen ? "visible" : "hidden"}
+				variants={menu}
+				initial="hidden"
+			>
+				{menuLinks.map((link, index) =>
+					<motion.li key={link[0]} variants={item}>
+						{isHomePage ?
+							<Link
+								onClick={() => setOpen(false)}
+								className="nav-text-hover"
+								activeClass="nav-active"
+								to={link[0]}
+								spy={true}
+								smooth={true}
+								offset={0}
+								duration={300}
+								hashSpy={true}
+								href={`/#${link[0]}`}
+							>
+								{link[1]}
+							</Link>
+						: <a href={`/#${link[0]}`} className="nav-text-hover">{link[1]}</a>}
+					</motion.li>
+				)}
+			</motion.ul>
+		</div>
 	)
 }
