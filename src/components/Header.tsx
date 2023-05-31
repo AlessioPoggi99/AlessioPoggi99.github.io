@@ -10,7 +10,7 @@ export default function Header() {
 	const [isHomePage, setIsHomePage] = useState<null | boolean>(null);
 	const [navStripStyle, setNavStripStyle] = useState({left: '0', opacity: '0'});
 
-	const logoStyle = 'logo-container relative pl-[44px] nav-text-hover font-bold flex items-center m-0';
+	const logoStyle = 'logo-container relative pl-[44px] nav-text-hover font-bold flex items-center !m-0';
     const logoContent = <><img className="logo" src="/logo.png" alt="logo" /><img className="logo" src="/logo-hover.png" alt="logo" />{author}</>;
 
 	const menuLinks = [["portfolio", "Portfolio"], ["about", "About me"], ["contacts", "Contacts"]];
@@ -56,7 +56,7 @@ export default function Header() {
 					}
 
 					{/*** MENU ***/}
-					<ul id="nav-desktop-menu" className="grid grid-flow-col auto-cols-fr text-center gap-x-4 m-0">
+					<ul id="nav-desktop-menu" className="grid grid-flow-col auto-cols-fr text-center gap-x-4 !m-0">
 						{menuLinks.map((link, index) =>
 							<li className="relative" key={link[0]}>
 								{index == 0 ? <div id="nav-strip" style={navStripStyle}></div> : ''}
