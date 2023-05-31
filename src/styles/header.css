@@ -92,6 +92,19 @@ nav.navbar #nav-strip {
     height: 100vh;
 }
 
+#nav-mobile-menu ul svg {
+    position: absolute;
+    font-size: 30px;
+    width: 1em;
+    height: 1em;
+    pointer-events: none;
+    fill: var(--background);
+    stroke: var(--border);
+    stroke-width: 2px;
+    right: 5px;
+    bottom: 100%;
+}
+
 @media (hover: hover) and (pointer: fine) {
     a.logo-container:hover > img.logo:first-child {
         opacity: 0;

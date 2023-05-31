@@ -116,12 +116,13 @@ function MobileMenu({ menuLinks, isHomePage }) {
 	return (
 		<div id="nav-mobile-menu">
 			<Hamburger size={20} toggled={isOpen} toggle={setOpen} />
-			{isOpen ? <div class="bg-menu-layer" onClick={() => setOpen(false)}></div> : ''}
+			{isOpen ? <div className="bg-menu-layer" onClick={() => setOpen(false)}></div> : ''}
 			<motion.ul
 				animate={isOpen ? "visible" : "hidden"}
 				variants={menu}
 				initial="hidden"
 			>
+				<svg display="block" viewBox="0 0 30 30"><g transform="rotate(0 15 15)"><path fill="none" d="M23,27.8c1.1,1.2,3.4,2.2,5,2.2h2H0h2c1.7,0,3.9-1,5-2.2l6.6-7.2c0.7-0.8,2-0.8,2.7,0L23,27.8L23,27.8z"></path><path stroke="none" d="M23,27.8c1.1,1.2,3.4,2.2,5,2.2h2H0h2c1.7,0,3.9-1,5-2.2l6.6-7.2c0.7-0.8,2-0.8,2.7,0L23,27.8L23,27.8z"></path></g></svg>
 				{menuLinks.map((link, index) =>
 					<motion.li key={link[0]} variants={item}>
 						{isHomePage ?
