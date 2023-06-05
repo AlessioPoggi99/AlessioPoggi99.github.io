@@ -3,12 +3,31 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro'
-import Section from '../components/Section.astro'
+import HomeSection from '../components/HomeSection.astro'
+import HomeBlog from '../components/HomeBlog'
 import About from '../components/About'
 import ContactCard from '../components/ContactCard'
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
+import MotionHorizontal from '../components/motion/MotionHorizontal';
+import Button from '../components/Button'
+
 import '../styles/index.css'
+
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => {
+		if(a.data.updatedDate && b.data.updatedDate)
+			return a.data.updatedDate.valueOf() - b.data.updatedDate.valueOf()
+		else if(a.data.updatedDate)
+			return a.data.updatedDate.valueOf() - b.data.pubDate.valueOf()
+		else if(b.data.updatedDate)
+			return a.data.pubDate.valueOf() - b.data.updatedDate.valueOf()
+		else
+			return a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+	}
+).reverse().slice(0,3);
 ---
 
 <!DOCTYPE html>
@@ -21,16 +40,18 @@ import '../styles/index.css'
 
 		<main>
 			<Hero />
-			<Section id='portfolio' title='Portfolio'>
 
-			</Section>
-			<Section id='about' title='About me'>
+			<HomeSection id='blog' title='Blog'>
+				<HomeBlog posts={posts} client:load />
+			</HomeSection>
+
+			<HomeSection id='about' title='About me'>
 				<About client:load />
-			</Section>
+			</HomeSection>
 
-			<Section id='contacts' title='contacts'>
+			<HomeSection id='contacts' title='contacts'>
 				<ContactCard client:load />
-			</Section>
+			</HomeSection>
 		</main>
 
 		<Footer />

@@ -16,7 +16,7 @@ export default function Header() {
 	const logoStyle = 'logo-container relative pl-[44px] nav-text-hover font-bold flex items-center !m-0';
     const logoContent = <><img className="logo" src="/logo.png" alt="logo" /><img className="logo" src="/logo-hover.png" alt="logo" />{author}</>;
 
-	const menuLinks = [["portfolio", "Portfolio"], ["about", "About me"], ["contacts", "Contacts"]];
+	const menuLinks = [["blog", "Blog"], ["about", "About me"], ["contacts", "Contacts"]];
 
 	const handleMenuSetActive = (toIndex: number) => {
         setNavStripStyle({left: `calc((100% * ${toIndex}) + (16px * ${toIndex}))`, opacity: '1'});

@@ -1,9 +1,12 @@
 ---
 title: 'Using MDX'
-description: 'Lorem ipsum dolor sit amet'
+description: 'MDX is a special flavor of Markdown that supports embedded JavaScript & JSX syntax. This unlocks the ability to [mix JavaScript and UI Components into your Markdown content](https://docs.astro.build/en/guides/markdown-content/#mdx-features) for things like interactive charts or alerts.'
 pubDate: 'Jul 02 2022'
+updatedDate: 'Jul 05 2023'
 heroImage: '/placeholder-hero.jpg'
+tags: ["MDX", "Tailwind"]
 ---
+import Button from '../../components/Button.tsx';
 
 This theme comes with the [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) integration installed and configured in your `astro.config.mjs` config file. If you prefer not to use MDX, you can disable support by removing the integration from your config file.
 
@@ -18,9 +21,18 @@ If you have existing content authored in MDX, this integration will hopefully ma
 Here is how you import and use a UI component inside of MDX.  
 When you open this page in the browser, you should see the clickable button below.
 
-import HeroButtons from '../../components/HeroButtons';
-
-<HeroButtons client:load></HeroButtons>
+<div className="flex w-full justify-center items-center">
+<Button
+    client:only="react"
+    to={"/alessio-poggi-cv.pdf"} 
+    isScrollLink={false} 
+    blank={true}
+    scale={1.05}
+    buttonClass={"rounded-md bg-[color:var(--decoration)] px-3.5 py-2.5 text-sm font-semibold text-[var(--text-on)] shadow-sm flex"}
+>
+    Download CV
+</Button>
+</div>
 
 ## More Links
 

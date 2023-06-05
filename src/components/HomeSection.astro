@@ -9,7 +9,7 @@ const { id, title, sectionClass = '' } = Astro.props;
 ---
 
 <section id={id} class={sectionClass + ' flex justify-center items-center min-h-screen'}>
-    <div class="relative isolate pt-16 wrapper text-center">
+    <div class="relative isolate pt-16 wrapper text-center my-0">
         <div class="section-header">
             <span class="title-bar"></span>
             <h1 class="section-title">{title}</h1>
@@ -19,7 +19,7 @@ const { id, title, sectionClass = '' } = Astro.props;
 
     <style>
         .section-header {
-            padding-bottom: 40px;
+            padding-bottom: 4rem;
         }
 
         .title-bar {
@@ -51,6 +51,10 @@ const { id, title, sectionClass = '' } = Astro.props;
 
         /* 767px or less */
         @media (max-width: 767px) {
+            .section-header {
+                padding-bottom: 2.5rem;
+            }
+
             .section-title {
                 font-size: 16px;
                 line-height: 16px;
