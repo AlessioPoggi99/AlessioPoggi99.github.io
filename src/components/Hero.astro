@@ -20,7 +20,7 @@ import MotionHorizontal from './motion/MotionHorizontal';
                     <p>I am a <strong>Software Engineer</strong></p>
                     <p>My <em>skills</em> are Astro, React, NodeJs and more...</p>
                 </div>
-                <p class="mt-6 text-sm sm:text-lg leading-8 text-[var(--text-off)]"><span id="typed"></span></p>
+                <p id="typedParagraph" class="mt-6 text-sm sm:text-lg leading-8 text-[var(--text-off)]"><span id="typed"></span></p>
                 <MotionHorizontal x={10} y={0} duration={0.8} client:only="react">
                     <div class="hero-btn-container mt-10 flex items-center justify-center gap-x-6">
                         <Button 
@@ -51,6 +51,13 @@ import MotionHorizontal from './motion/MotionHorizontal';
 
     </div>
 
+    <style>
+        #home #typedParagraph {
+            opacity: 0;
+            transition: opacity linear 0.8s .25s;
+        }
+    </style>
+
     <script>
         import Typed from "typed.js";
         const typed = new Typed("#typed", {
@@ -58,5 +65,12 @@ import MotionHorizontal from './motion/MotionHorizontal';
             typeSpeed: 50,
             loop: true,
         });
+
+
+
+        window.onload = () => {
+            const typedParagraph = document.getElementById('typedParagraph') as HTMLElement;
+            if(typedParagraph) typedParagraph.style.opacity = '1';
+        }
     </script>
 </section>

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { motion } from "framer-motion";
 import FormattedDate from './FormattedDate';
 import MotionHorizontal from './motion/MotionHorizontal';
+
 import Button from './Button'
 
 export default function HomeBlog({ posts }) {
@@ -10,7 +11,7 @@ export default function HomeBlog({ posts }) {
         <>
         <div className="container">
             {posts.map(post => (
-                <MotionHorizontal x={0} y={15} duration={0.8} immidiate={false} _key={post.id} _className="card bg-[color:var(--border)] p-4 rounded-lg">
+                <MotionHorizontal x={0} y={15} duration={0.8} immidiate={false} key={post.id} _className="card bg-[color:var(--border)] p-4 rounded-lg">
                     <a href={'/blog/' + post.slug}>
                         <img src={post.data.heroImage} alt="post-placeholder" className="aspect-video rounded-xl" />
                     </a>

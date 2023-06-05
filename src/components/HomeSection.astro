@@ -8,8 +8,8 @@ interface Props {
 const { id, title, sectionClass = '' } = Astro.props;
 ---
 
-<section id={id} class={sectionClass + ' flex justify-center items-center min-h-screen'}>
-    <div class="relative isolate pt-16 wrapper text-center my-0">
+<section id={id} class={sectionClass + ' flex justify-center items-center min-h-screen pt-16'}>
+    <div class="relative isolate wrapper text-center my-0">
         <div class="section-header">
             <span class="title-bar"></span>
             <h1 class="section-title">{title}</h1>
