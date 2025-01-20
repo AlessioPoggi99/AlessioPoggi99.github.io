@@ -3,8 +3,8 @@ title: "Wordle"
 description: "Unofficial Italian fan-made adaptation of the New York Time's Wordle game"
 pubDate: "Sep 16 2023"
 updatedDate: "Oct 03 2023"
-heroImage: "/mijnlieff/hero.png"
-tags: ["ReactJs, NextJs, Socket.IO"]
+heroImage: "/wordle/hero.png"
+tags: ["ReactJs"]
 ---
 
 <div align='center'>
