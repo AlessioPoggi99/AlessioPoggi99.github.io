@@ -32,7 +32,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<Header client:only="react" />
 		<main class="prose prose-invert max-w-none wrapper">
 			<article>
-				{heroImage && <img width={720} height='auto' class="mx-auto" src={heroImage} alt={`${title} main image`} />}
+				{heroImage && <img width={720} height='auto' class="mx-auto rounded-xl shadow-lg shadow-black" src={heroImage} alt={`${title} main image`} />}
 				<h1 class="title">{title}</h1>
 				<FormattedDate date={pubDate} />
 				{
