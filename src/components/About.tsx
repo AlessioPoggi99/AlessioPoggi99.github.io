@@ -21,13 +21,15 @@ export default function About() {
           , I am a Software Engineer and Developer based in Pavia, Italy 🇮🇹
         </h2>
         <p className="text-[var(--text-off)]">
-          I possess an impressive arsenal of skills in HTML, CSS, JavaScript,
-          React, Tailwind, and SCSS. I excel in designing and maintaining
-          responsive websites that offer a smooth user experience. My expertise
-          lies in crafting dynamic, engaging interfaces through writing clean
-          and optimized code and utilizing cutting-edge development tools and
-          techniques. I am also a team player who thrives in collaborating with
-          cross-functional teams to produce outstanding web applications.
+          I’m a passionate developer with strong skills in HTML, CSS,
+          JavaScript, React, Tailwind, and more. I love designing and
+          maintaining responsive websites that provide smooth and engaging user
+          experiences. But my interests go beyond web development, my passion
+          for technology drives me to explore anything related to computing,
+          from coding to discovering new tools and techniques. Writing clean and
+          optimized code isn’t just work for me; it’s a way to bring dynamic and
+          exciting interfaces to life. I enjoy diving into projects that spark
+          my curiosity and allow me to grow constantly.
         </p>
       </motion.div>
       <ul className="flex flex-col justify-center gap-y-3">
@@ -49,4 +51,3 @@ export default function About() {
     </MotionItems>
   );
 }
-
