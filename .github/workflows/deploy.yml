@@ -14,25 +14,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18 # Ensure a compatible Node version
+          node-version: 18
 
       - name: Install dependencies
-        run: npm i # or yarn install / pnpm install
+        run: npm ci # or yarn install / pnpm install
 
       - name: Build site
-        run: npm run build # Ensure this matches your build command
+        run: npm run build
+
+      - name: Verify build output
+        run: ls -l dist/ # Debugging step: list the contents of dist/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: github-pages
-          path: dist/ # Ensure this matches your Astro output folder
+          name: github-pages # This must match the download step
+          path: dist/
 
   deploy:
     needs: build
@@ -46,6 +49,9 @@ jobs:
         with:
           name: github-pages
           path: dist/
+
+      - name: Verify downloaded files
+        run: ls -l dist/ # Debugging step: list the contents
 
       - name: Deploy to GitHub Pages
         id: deployment
