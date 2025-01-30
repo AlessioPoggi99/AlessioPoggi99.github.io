@@ -1,48 +1,49 @@
 :root {
-	--background: #1c1c1c;
-	--nav-background: #1c1c1cdd;
-	--border: #232323;
-	/*
+  --background: #1c1c1c;
+  --nav-background: #1c1c1cdd;
+  --border: #232323;
+  /*
     --text-on: #eaeaea;
 	--text-off: #999999;
+  --decoration: #963947;
     */
-    --text-on: white;
-    --text-off: rgb(209, 213, 219);
-	--text-subtitle: #7f7f7f;
-	--decoration: #963947;
-}  
+  --text-on: white;
+  --text-off: rgb(209, 213, 219);
+  --text-subtitle: #7f7f7f;
+  --decoration: #c73636;
+}
 
 body {
-	font-family: 'Inter', sans-serif;
-	-webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    overflow-wrap: break-word;
-    background-color: #1c1c1c;
-    color: #eaeaea;
-    display: block;
-    box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+  background-color: #1c1c1c;
+  color: #eaeaea;
+  display: block;
+  box-sizing: border-box;
 }
 
 .wrapper {
-    margin: auto;
-    padding: 0;
-    width: 940px;
+  margin: auto;
+  padding: 0;
+  width: 940px;
 }
 .wrapper > * {
-    margin: auto;
+  margin: auto;
 }
 
 /* between 768px and 979px */
 @media (min-width: 768px) and (max-width: 979px) {
-    .wrapper {
-        width: 724px;
-    }
+  .wrapper {
+    width: 724px;
+  }
 }
 
 /* 767px or less */
 @media (max-width: 767px) {
-    .wrapper {
-        width: 100%;
-        padding: 0 16px 0 16px;
-    }
+  .wrapper {
+    width: 100%;
+    padding: 0 16px 0 16px;
+  }
 }

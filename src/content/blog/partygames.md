@@ -1,29 +1,27 @@
 ---
-title: "Party games"
-description: "Scatena il divertimento con questa raccolta di Party Games! Affronta l'adrenalina di 'Trova l'Impostore', metti alla prova la tua sintonia con 'Intesa Vincente', decifra messaggi segreti in 'Decrypto' e svela i lati oscuri dei tuoi amici con 'Avalon'. Risate, suspense e amicizie messe alla prova ti aspettano!"
-pubDate: "Feb 23 2024"
-updatedDate: "Jan 05 2025"
+title: Party games
+description: Step into a world of fun and surprises! Connect with your friends in a virtual room to set up the game, then get ready for face-to-face action. Once the game begins, it's all about playing in person—strategy, quick thinking, and lots of laughs. Who will outsmart, outplay, and outlast the rest? The ultimate party experience is just a game away!
+pubDate: Feb 23 2024
+updatedDate: Jan 5 2025
 heroImage: "/partygames/hero.png"
-tags: ["ReactJs, NodeJs, Socket.IO"]
+tags: ["nodejs","reactjs","socket-io"]
 ---
 
 <div align='center'>
-  <h1 class='my-8'>🎉 Party Games 🎉</h1>
+  <h1 class="main-title">🎉 Party Games 🎉</h1>
 </div>
 
-Raccolta di Party Games per giocare in compagnia.
-
-Preparati a scatenare il divertimento con questa raccolta di Party Games! Affronta l'adrenalina di 'Trova l'Impostore', metti alla prova la tua sintonia con 'Intesa Vincente', decifra messaggi segreti in 'Decrypto' e svela i lati oscuri dei tuoi amici con 'Avalon'. Risate, suspense e amicizie messe alla prova ti aspettano!
+Step into a world of fun and surprises! Connect with your friends in a virtual room to set up the game, then get ready for face-to-face action. Once the game begins, it's all about playing in person—strategy, quick thinking, and lots of laughs. Who will outsmart, outplay, and outlast the rest? The ultimate party experience is just a game away!
 
 ## 🎮 Game List
 
-1. <strong>Trova l'Impostore</strong>, un gioco di parole, sinonimi e deduzione. Uno di voi veste i panni dell'impostore con lo scopo di non farsi trovare, cercando nel frattempo di indovinare la paola segreta
-2. <strong>Intesa</strong>, riproduzione del celebre gioco televisivo Intesa vincente.
-3. <strong>Decrypto</strong>, un gioco a squadre di parole e deduzione in cui a turno un componente della squadra ha il compito di trasmettere ai suoi compagni una parola in codice. Riuscirete a decifrarla?
-4. <strong>Avalon</strong>, un gioco a identita' nascoste che vi proietta in un mondo fantasy fatto di intrighi e missioni. Riuscirete a completare con successo le missioni senza essere sabotati dalle forze del male?
-5. <strong>Fishbowl</strong>, celebre gioco che non ha bisogno di presentazioni, reso interessante da qualche regola stravagantre.
-6. <strong>Werewords</strong>, un gioco in cui dovrete indovinare la parola magica facendo delle domande al Sindaco, il quale potra'j rispondere solo con si o no. Ma attenzione tra di voi si aggira un lupo mannaro che cerca di sviarvi.
-7. <strong>La spia</strong>, un gioco molto simile a "Trova l'Impostore", con la differenza che vi farete domande l'un l'altro per scovare la spia nascosta tra di voi.
+1. <strong>Find the Impostor</strong>, a fun word, synonym, and deduction game. One of you plays the impostor, trying to stay hidden while also guessing the secret word.
+2. <strong>Intesa</strong>, a twist on the famous TV game show _Intesa Vincente_, where fast thinking and quick answers are key.
+3. <strong>Decrypto</strong>, a team-based word and deduction game where, on each turn, a player must communicate a coded word to their teammates. Can you crack the code?
+4. <strong>Avalon</strong>, a hidden identity game set in a fantasy world filled with intrigue, quests, and mystery. Can you complete your missions without falling victim to the evil forces?
+5. <strong>Fishbowl</strong>, a classic game with a twist, made even more exciting with some quirky and fun rules.
+6. <strong>Werewords</strong>, a guessing game where you must figure out the magic word by asking the Mayor yes-or-no questions. But beware, a werewolf lurks among you, trying to mislead the group.
+7. <strong>The Spy</strong>, similar to _Find the Impostor_, but here you’ll ask each other questions to uncover the spy hiding in your midst.
 
 ## 📚 Stack
 
@@ -58,42 +56,46 @@ $PROJECT_ROOT
 └── index.js
 ```
 
-## ▶️  How to try it
+## ▶️ How to try it
 
-Puoi usere il sito al seguente indirizzo:
+You can access the website using the following link:
 
 - <a href="https://partygames.alessiopoggi.org" target="_blank">Party Games 🎉</a>
-  <p>E' possibile installare il sito sul proprio dispositivo usando Google Chrome, sia su Desktop che su Android. Questa funzionalità non è attualmente disponibile su IOS a causa del non funzionamento di 'Screen Wake Lock API'.</p>
+  <p>You can install the site on your device using Google Chrome, both on Desktop and Android. This feature is currently unavailable on iOS due to the 'Screen Wake Lock API' not working.</p>
 
-Altrimenti puoi clonare la <a href="https://github.com/AlessioPoggi99/Party-Games.git" target="_blank">Github repository</a>
+Alternatively, you can clone the <a href="https://github.com/AlessioPoggi99/Party-Games.git" target="_blank">Github repository</a>
 
 ```sh
 npm run build # build client and server
 npm run start # run a local hosting server -> localhost:8000
 ```
 
+Currently, the site has been developed entirely in Italian. If you're a developer and interested in helping me translate it, feel free to reach out!
+
 ## 📷 Screenshots
 
-#### Mobile
+### Mobile
 
-<p align="center" class='grid grid-cols-4 gap-x-2'>
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-home-page1" src="/partygames/mobile1.png"/>
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-home-page2" src="/partygames/mobile2.png"/>
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-werewords" src="/partygames/mobile3.png"/>
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-decrypto" src="/partygames/mobile4.png"/>
+<p align="center" class="img-grid">
+  <img width="24%" height="auto" alt="mobile-home-page1" class="rounded-md" src="https://www.alessiopoggi.org/partygames/mobile1.png"/>
+  <img width="24%" height="auto" alt="mobile-home-page2" class="rounded-md" src="https://www.alessiopoggi.org/partygames/mobile2.png"/>
+  <img width="24%" height="auto" alt="mobile-werewords" class="rounded-md" src="https://www.alessiopoggi.org/partygames/mobile3.png"/>
+  <img width="24%" height="auto" alt="mobile-decrypto" class="rounded-md" src="https://www.alessiopoggi.org/partygames/mobile4.png"/>
 </p>
 
-#### Desktop
+### Desktop
 
-<p align="center" class='grid grid-cols-2 gap-x-2'>
-  <img alt="desktop-home-page1" src="/partygames/desktop1.png"/>
-  <img alt="desktop-home-page2" src="/partygames/desktop2.png"/>
-  <img alt="desktop-intesa" src="/partygames/desktop3.png"/>
-  <img alt="desktop-fishbowl" src="/partygames/desktop4.png"/>
+<p align="center" class="img-grid-2">
+  <img width="49%" height="auto" alt="desktop-home-page1" class="no-shadow" src="https://www.alessiopoggi.org/partygames/desktop1.png"/>
+  <img width="49%" height="auto" alt="desktop-home-page2" class="no-shadow" src="https://www.alessiopoggi.org/partygames/desktop2.png"/>
+  <img width="49%" height="auto" alt="desktop-intesa" class="no-shadow" src="https://www.alessiopoggi.org/partygames/desktop3.png"/>
+  <img width="49%" height="auto" alt="desktop-fishbowl" class="no-shadow" src="https://www.alessiopoggi.org/partygames/desktop4.png"/>
 </p>
 
 ## 🔗 Links
 
 - <a href="https://github.com/AlessioPoggi99" target="_blank">My Github</a>
 
-- <span><a href="https://partygames.alessiopoggi.org" target="_blank">Party games 🎉</a> and <a href="https://github.com/AlessioPoggi99/Party-Games" target="_blank">Party Games github repository</a></span> (the repository is actually private).
+- <a href="https://partygames.alessiopoggi.org" target="_blank">Party games 🎉</a>
+
+- <span><a href="https://github.com/AlessioPoggi99/Party-Games" target="_blank">Party Games github repository</a> (the repository is actually private).</span>

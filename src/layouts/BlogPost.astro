@@ -8,57 +8,63 @@ import Button from '../components/Button'
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+import '../styles/blog-post.css'
+
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
-			.title {
-				font-size: 2em;
-				margin: 0.25em 0 0;
-			}
 			hr {
-				border-top: 1px solid #ddd;
-				margin: 1rem 0;
-			}
-			.last-updated-on {
-				font-style: italic;
+        border-top: 1px solid #dddddd80;
+				margin: 0rem 0;
 			}
 		</style>
 	</head>
 
-	<body class="pt-[55px]">
+	<body>
 		<Header client:only="react" />
-		<main class="prose prose-invert max-w-none wrapper">
-			<article>
-				{heroImage && <img width={720} height='auto' class="mx-auto rounded-xl shadow-lg shadow-black" src={heroImage} alt={`${title} main image`} />}
-				<h1 class="title">{title}</h1>
-				<FormattedDate date={pubDate} />
-				{
-					updatedDate && (
-						<div class="last-updated-on">
-							Last updated on <FormattedDate date={updatedDate} />
-						</div>
-					)
-				}
-				<hr />
-				<slot />
-			</article>
-      <div class="flex w-full justify-center pt-6">
-        <Button    
-          client:only="react"
-          to={"/blog"}
-          isScrollLink={false}
-          blank={false}
-          buttonClass={
-            "text-sm font-semibold leading-6 text-[var(--decoration)] cursor-pointer uppercase no-underline"
+    <main class="pt-[55px]">
+      <section id="blog-post" class="prose prose-invert max-w-none wrapper">
+        <article>
+          {heroImage && <img width={720} height='auto' class="mx-auto rounded-xl" src={heroImage} alt={`${title} main image`} />}
+          <div class="mb-1">
+            <span><a href="/">Home</a></span>
+            <span class="mx-1">❯</span>
+            <span><a href="/blog">Posts</a></span>
+            <span class="mx-1">❯</span>
+            <span class="title">{title}</span>
+          </div>
+          <FormattedDate date={pubDate} dateClass="pub-date"/>
+          {
+            updatedDate && (
+              <div class="last-updated-on">
+                Last updated on <FormattedDate date={updatedDate} />
+              </div>
+            )
           }
-        >
-        &larr; Back to all posts
-        </Button>
-      </div>
+          <div class="flex gap-x-2">{
+            tags.map(tag => {
+              return <p class="tag">{tag}</p>
+            })
+          }</div>
+          <hr />
+          <slot />
+        </article>
+        <div class="flex w-full justify-center pt-6">
+          <Button 
+            client:only="react"
+            to={"/blog"} 
+            isScrollLink={false} 
+            blank={false}
+            buttonClass={"rounded-md bg-[color:var(--decoration)] px-3.5 py-2.5 text-sm font-semibold !text-[var(--text-on)] shadow-sm"}
+          >
+            Back to all Posts
+          </Button>
+        </div>
+      </section>
 		</main>
 		<Footer />
 	</body>

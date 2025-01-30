@@ -1,23 +1,23 @@
 ---
-title: "Wordle"
-description: "Unofficial Italian fan-made adaptation of the New York Time's Wordle game"
-pubDate: "Sep 16 2023"
-updatedDate: "Oct 03 2023"
+title: Wordle
+description: Unofficial Italian fan-made version of Wordle. This version stays true to the original’s word puzzle mechanics, offering endless gameplay with over 3,000 words to guess, the ability to track your stats, and detailed performance insights. Play without limits, challenge your vocabulary, and improve your skills with every guess, all in Italian!
+pubDate: Sep 16 2023
+updatedDate: Oct 3 2023
 heroImage: "/wordle/hero.png"
-tags: ["ReactJs"]
+tags: ["pwa","reactjs","vitejs"]
 ---
 
 <div align='center'>
   <h1 class='my-8'>🇮🇹 Wordle-ita 🇮🇹</h1>
   &nbsp;
-  <img width="100%" alt="lighthouse-score" src="https://github.com/AlessioPoggi99/Wordle-ita/assets/80333233/3c7f8d35-b880-4de8-9fa2-5ad2ad6bae77"/>  
+  <img width="100%" alt="lighthouse-score" class="no-shadow" src="https://github.com/AlessioPoggi99/Wordle-ita/assets/80333233/3c7f8d35-b880-4de8-9fa2-5ad2ad6bae77"/>  
   &nbsp;
   <h1></h1>
 </div>
 
-Unofficial Italian fan-made version of <a href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Wordle</a>
+Unofficial Italian fan-made version of <a href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Wordle</a>. This version stays true to the original’s word puzzle mechanics, offering endless gameplay with over 3,000 words to guess, the ability to track your stats, and detailed performance insights. Play without limits, challenge your vocabulary, and improve your skills with every guess, all in Italian!
 
-You have six attempts to guess a five-letter word, with feedback given for each guess in the form of colored tiles indicating when letters match or occupy the correct position.
+You have six attempts to guess a five-letter word, with feedback given for each guess in the form of colored tiles indicating when letters match or occupy the correct position. Green tiles indicate that a letter is both correct and in the correct position, yellow tiles mean the letter is correct but in the wrong position, and gray tiles show that the letter is not in the word at all. The goal is to use this feedback to adjust your guesses and find the word within six tries.
 
 ## 📚 Stack
 
@@ -52,39 +52,40 @@ $PROJECT_ROOT
 
 You can try this unofficial version of Wordle on the website:
 
-- <a href="https://alessiopoggi99.github.io/Wordle-ita/" target="_blank">Wordle-ita 🇮🇹</a>
+- <a href="https://www.wordle.alessiopoggi.org" target="_blank">Wordle-ita 🇮🇹</a>
   <p>It's now possible to install the web app on your device and play <strong>OFFLINE</strong>. You can use Chrome on desktop, or you can add the website to your smartphone's home page.</p>
 
 Otherwise you can clone the <a href="https://github.com/AlessioPoggi99/Wordle-ita" target="_blank">Github repository</a> and run it on your pc
-
 ```sh
-yarn
-yarn dev # run a local hosting server
+yarn           # install dependencies
+yarn dev       # run a local hosting server
 npm run deploy # deploy to github pages
 ```
 
 ## 📷 Screenshots
 
-#### Mobile (light theme)
+### Mobile (light theme)
 
-<p align="center" class="grid grid-cols-4 gap-x-2">
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-home" src="/wordle/mobile1.png"/>
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-gameover" src="/wordle/mobile2.png"/>
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-info" src="/wordle/mobile3.png"/>
-  <img class="rounded-md shadow-black shadow-lg" alt="mobile-settings" src="/wordle/mobile4.png"/>
+<p align="center" class="img-grid">
+  <img width="24%" height="auto" alt="mobile-home" class="rounded-md" src="https://www.alessiopoggi.org/wordle/mobile1.png"/>
+  <img width="24%" height="auto" alt="mobile-gameover" class="rounded-md" src="https://www.alessiopoggi.org/wordle/mobile2.png"/>
+  <img width="24%" height="auto" alt="mobile-info" class="rounded-md" src="https://www.alessiopoggi.org/wordle/mobile3.png"/>
+  <img width="24%" height="auto" alt="mobile-settings" class="rounded-md" src="https://www.alessiopoggi.org/wordle/mobile4.png"/>
 </p>
 
-#### Desktop (dark theme)
+### Desktop (dark theme)
 
-<p align="center" class="grid grid-cols-2 gap-x-2">
-  <img alt="desktop-home" src="/wordle/desktop1.png"/>
-  <img alt="desktop-gameover" src="/wordle/desktop2.png"/>
-  <img alt="desktop-info" src="/wordle/desktop3.png"/>
-  <img alt="desktop-settings" src="/wordle/desktop4.png"/>
+<p align="center" class="img-grid-2">
+  <img width="49%" height="auto" alt="desktop-home" class="no-shadow" src="https://www.alessiopoggi.org/wordle/desktop1.png"/>
+  <img width="49%" height="auto" alt="desktop-gameover" class="no-shadow" src="https://www.alessiopoggi.org/wordle/desktop2.png"/>
+  <img width="49%" height="auto" alt="desktop-info" class="no-shadow" src="https://www.alessiopoggi.org/wordle/desktop3.png"/>
+  <img width="49%" height="auto" alt="desktop-settings" class="no-shadow" src="https://www.alessiopoggi.org/wordle/desktop4.png"/>
 </p>
 
 ## 🔗 Links
 
 - <a href="https://github.com/AlessioPoggi99" target="_blank">My Github</a>
 
-- <span><a href="https://alessiopoggi99.github.io/Wordle-ita/" target="_blank">Wordle 🇮🇹</a> and <a href="https://github.com/AlessioPoggi99/Wordle-ita/" target="_blank">Wordle github repository</a></span>
+- <a href="https://alessiopoggi99.github.io/Wordle-ita/" target="_blank">Wordle 🇮🇹</a>
+
+- <a href="https://github.com/AlessioPoggi99/Wordle-ita" target="_blank">Wordle github repository</a>
