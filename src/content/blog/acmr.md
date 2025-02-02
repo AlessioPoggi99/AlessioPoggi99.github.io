@@ -1,10 +1,10 @@
 ---
-title: "Automatic chess move recognition"
-description: "A Python program that uses a camera to detect chess moves on a physical board. It enables two players to track their game or play against a chess AI. The program processes images to recognize piece movements and updates the game state in real-time, bringing a seamless blend of physical and digital chess interaction!"
-pubDate: "Sep 26 2024"
-updatedDate: "Sep 26 2024"
+title: Automatic chess move recognition
+description: A Python program that uses a camera to detect chess moves on a physical board. It enables two players to track their game or play against a chess AI. The program processes images to recognize piece movements and updates the game state in real-time, bringing a seamless blend of physical and digital chess interaction!
+pubDate: Sep 26 2024
+updatedDate: Sep 26 2024
 heroImage: "/acmr/hero.png"
-tags: ["python", "opencv", "scikit-learn"]
+tags: ["opencv","python","scikit-learn"]
 ---
 
 <div align='center'>
@@ -138,10 +138,15 @@ The initial idea was to develop the project using Hall effect sensors connected 
 
 6. ### Demo Video
 
-   [Watch the video](/acmr/demo.mp4)
-   <iframe width="100%" height="300" src="https://www.alessiopoggi.org/acmr/demo.mp4" frameborder="0" allowfullscreen></iframe>
+   [Watch the video](https://www.alessiopoggi.org/acmr/demo.mp4)
 
-7. ### Conclusions
+   <video playsinline controls>
+    <source src="https://www.alessiopoggi.org/acmr/demo.mp4" type="video/mp4">
+  </video>
+   
+   <p class="hidden">https://github.com/user-attachments/assets/b63cb926-42d6-421d-888c-b2f979801ecd</p>
+
+8. ### Conclusions
 
    The program operates in **real-time** on conventional hardware, such as a mid-range computer, as it does not require extensive processing time. However, in non-standard or unconventional lighting conditions or camera placements—for example, **outdoor settings with intense sunlight** or **indoor settings with dim lighting**—the classifier may make errors that prevent it from accurately detecting moves. This highlights an area for future improvement: **expanding and diversifying the dataset** to make the classifier more robust.
 
@@ -188,79 +193,79 @@ $PROJECT_ROOT
 
 ### Running the Program with Pre-Trained Models:
 
-1. **Clone the GitHub Repository**:
-
-   - Start by cloning the <a href="https://github.com/AlessioPoggi99/chess-vision-opencv" target="_blank">Github repository</a> to your local machine.
-
-2. **(Optional) Create a Python Virtual Environment**:
-
-   - Run the following commands in your terminal:
-
-     ```bash
-     python -m venv venv_name
-     # On Windows:
-     venv_name\Scripts\activate
-     # On Linux or Mac:
-     source venv_name/bin/activate
-     ```
-
-3. **Install Dependencies**:
-
-   - Install the required dependencies by running:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Run the Program**:
-
-   - Finally, start the program by executing:
-
-   ```bash
-   python main.py
-   ```
-
-This will set up the environment and launch the program for you to test. It will use the **scaler** and **classifier** trained by me.
-
----
+  1. **Clone the GitHub Repository**:
+  
+     - Start by cloning the <a href="https://github.com/AlessioPoggi99/chess-vision-opencv" target="_blank">Github repository</a> to your local machine.
+  
+  2. **(Optional) Create a Python Virtual Environment**:
+  
+     - Run the following commands in your terminal:
+  
+       ```bash
+       python -m venv venv_name
+       # On Windows:
+       venv_name\Scripts\activate
+       # On Linux or Mac:
+       source venv_name/bin/activate
+       ```
+  
+  3. **Install Dependencies**:
+  
+     - Install the required dependencies by running:
+  
+       ```bash
+       pip install -r requirements.txt
+       ```
+  
+  4. **Run the Program**:
+  
+     - Finally, start the program by executing:
+  
+       ```bash
+       python main.py
+       ```
+  
+  This will set up the environment and launch the program for you to test. It will use the **scaler** and **classifier** trained by me.
+  
+  ---
 
 ### Training Your Own Classifier
 
-If you want to train your own classifier, follow these steps:
-
-1. **Generate a Custom Dataset**:
-
-   - Record videos of chess games, ensuring that:
-     - The first few seconds of the video show an **empty chessboard** for board recognition.
-     - The chessboard and camera remain **fixed** throughout the recording.
-   - Use the script <strong class='tag'>/classifier/square_img_generator.py</strong> to extract images of individual chessboard squares after each move.
-
-2. **Organize the Dataset**:
-
-   - Organize the extracted images into folders with the following structure:
-
-   ```sh
-   /classifier/dataset
-   │
-   ├── black          # Black piece
-   │   ├── black_square   # Black chessboard square
-   │   └── white_square   # White chessboard square
-   │
-   ├── white          # White piece
-   │   ├── black_square   # Black chessboard square
-   │   └── white_square   # White chessboard square
-   │
-   └── empty         # Empty square
-       ├── black_square   # Black chessboard square
-       └── white_square   # White chessboard square
-   ```
-
-   Here, `black, white, empty`, and `black_square, white_square` refers to the classification of each square.
-
-3. **Train the Classifier**:
-   - Use the <strong class="tag">/classifier/classifier.ipynb</strong> notebook to train and save your own **scaler** and **classifier**.
-
-This process allows you to create a personalized classifier tailored to your specific setup and conditions.
+  If you want to train your own classifier, follow these steps:
+  
+  1. **Generate a Custom Dataset**:
+  
+     - Record videos of chess games, ensuring that:
+       - The first few seconds of the video show an **empty chessboard** for board recognition.
+       - The chessboard and camera remain **fixed** throughout the recording.
+     - Use the script <strong class='tag'>/classifier/square_img_generator.py</strong> to extract images of individual chessboard squares after each move.
+  
+  2. **Organize the Dataset**:
+  
+     - Organize the extracted images into folders with the following structure:
+  
+       ```sh
+       /classifier/dataset
+       │
+       ├── black          # Black piece
+       │   ├── black_square   # Black chessboard square
+       │   └── white_square   # White chessboard square
+       │
+       ├── white          # White piece
+       │   ├── black_square   # Black chessboard square
+       │   └── white_square   # White chessboard square
+       │
+       └── empty         # Empty square
+           ├── black_square   # Black chessboard square
+           └── white_square   # White chessboard square
+       ```
+  
+     Here, `black, white, empty`, and `black_square, white_square` refers to the classification of each square.
+  
+  3. **Train the Classifier**:
+     - Use the <strong class="tag">/classifier/classifier.ipynb</strong> notebook to train and save your own **scaler** and **classifier**.
+  
+  This process allows you to create a personalized classifier tailored to your specific setup and conditions.
 
 ## 🔗 Links
 
