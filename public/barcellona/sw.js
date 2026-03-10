@@ -1,4 +1,4 @@
-const CACHE = "bcn-v0.11";
+const CACHE = "bcn-v0.12";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((cache) => cache.add("/")));
@@ -25,11 +25,10 @@ self.addEventListener("fetch", (e) => {
       return fetch(e.request)
         .then((response) => {
           if (response.ok) {
-            caches
-              .open(CACHE)
-              .then((cache) => cache.put(e.request, response.clone()));
+            const clone = response.clone(); // clona PRIMA di restituire
+            caches.open(CACHE).then((cache) => cache.put(e.request, clone));
           }
-          return response;
+          return response; // restituisce l'originale al browser
         })
         .catch(() => cached);
     }),
