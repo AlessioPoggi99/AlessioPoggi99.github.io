@@ -1,0 +1,54 @@
+---
+// src/components/Stop.astro
+import type { Stop } from '../_data/trip';
+import Tag from './Tag.astro';
+import InfoBlock from './InfoBlock.astro';
+
+interface Props { stop: Stop; }
+const { stop } = Astro.props;
+
+const accordionId = `acc-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div class="stop">
+  <div class="stop-time">{stop.time}</div>
+  <div class="stop-dot"></div>
+  <div class="stop-body">
+
+    <div class="stop-header">
+      <div class="stop-name">{stop.name}</div>
+      {stop.tags && stop.tags.length > 0 && (
+        <div class="tags">
+          {stop.tags.map(tag => <Tag tag={tag} />)}
+        </div>
+      )}
+    </div>
+
+    {stop.duration && (
+      <div class="stop-duration"><strong>{stop.duration}</strong></div>
+    )}
+
+    {stop.description && (
+      <p class="stop-desc" set:html={stop.description} />
+    )}
+
+    {stop.longText && (
+      <div class="accordion" id={accordionId}>
+        <button class="accordion-trigger" aria-expanded="false" aria-controls={`${accordionId}-body`}>
+          <span class="accordion-label">Approfondimento</span>
+          <span class="accordion-icon" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-body" id={`${accordionId}-body`} role="region" hidden>
+          <div class="accordion-content" set:html={stop.longText} />
+        </div>
+      </div>
+    )}
+
+    {stop.blocks && stop.blocks.map(block => <InfoBlock block={block} />)}
+
+  </div>
+</div>
+
+{stop.transitAfter && (
+  <div class="transit">{stop.transitAfter}</div>
+)}

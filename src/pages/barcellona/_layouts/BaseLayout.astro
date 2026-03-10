@@ -1,0 +1,98 @@
+---
+import '../_styles/main.css'
+
+interface Props {
+  title?: string;
+}
+const { title = 'Barcellona — 4 Giorni' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <link rel="manifest" href="/barcellona/manifest.json" />
+  <meta name="theme-color" content="#1a1612" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="apple-touch-icon" href="/barcellona/icon512.png" />
+
+  <title>{title}</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <slot />
+  <script>
+    // ── TABS ─────────────────────────────────────────────────────
+    function showDay(n) {
+      document.querySelectorAll('.day-section').forEach(s => s.classList.remove('visible'));
+      document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('day-' + n)?.classList.add('visible');
+      document.querySelectorAll('.day-tab[data-day="' + n + '"]').forEach(t => t.classList.add('active'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.showDay = showDay;
+
+    // ── accordion unificato ───────────────────────────────────────
+    // gestisce: .accordion-trigger (stop longText)
+    //           .section-trigger   (dict + guide)
+
+    function toggleAccordion(trigger) {
+      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+      const body = document.getElementById(trigger.getAttribute('aria-controls'));
+      if (!body) return;
+
+      trigger.setAttribute('aria-expanded', String(!isExpanded));
+
+      if (isExpanded) {
+        body.style.maxHeight = body.scrollHeight + 'px';
+        requestAnimationFrame(() => {
+          body.style.transition = 'max-height 0.3s ease, opacity 0.25s ease';
+          body.style.maxHeight = '0';
+          body.style.opacity = '0';
+          body.addEventListener('transitionend', function h() {
+            body.hidden = true;
+            body.style.cssText = '';
+            body.removeEventListener('transitionend', h);
+          }, { once: true });
+        });
+      } else {
+        body.hidden = false;
+        body.style.maxHeight = '0';
+        body.style.opacity = '0';
+        requestAnimationFrame(() => {
+          body.style.transition = 'max-height 0.35s ease, opacity 0.3s ease';
+          body.style.maxHeight = body.scrollHeight + 'px';
+          body.style.opacity = '1';
+          body.addEventListener('transitionend', function h() {
+            body.style.maxHeight = '';
+            body.style.transition = '';
+            body.removeEventListener('transitionend', h);
+          }, { once: true });
+        });
+      }
+    }
+
+    document.addEventListener('click', function (e) {
+      const trigger =
+        e.target.closest('.accordion-trigger') ||
+        e.target.closest('.section-trigger');
+      if (trigger) toggleAccordion(trigger);
+    });
+
+    // ── service worker ───────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/barcellona/sw.js');
+      });
+    }
+  </script>
+</body>
+</html>

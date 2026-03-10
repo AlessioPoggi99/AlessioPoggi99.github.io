@@ -1,0 +1,62 @@
+---
+// src/components/Guide.astro
+import type { GuideSection } from '../_data/guide';
+interface Props { sections: GuideSection[]; }
+const { sections } = Astro.props;
+---
+<div class="day-section" data-day="guide" id="day-guide">
+  <div class="day-header">
+    <p class="day-number">Riferimento</p>
+    <h2 class="day-title">Guida<br /><em>Cibo, Locali &amp; Consigli pratici</em></h2>
+    <p class="day-subtitle">Piatti da ordinare, ristoranti e bar selezionati, locali notturni divisi per tipo, e tutto quello che serve sapere prima di partire.</p>
+    <div class="day-pills">
+      {sections.map(s => <span class="pill">{s.emoji} {s.title}</span>)}
+    </div>
+  </div>
+
+  <div class="sections-list">
+    {sections.map((section) => (
+      <div class="section-item">
+        <button
+          class="section-trigger"
+          aria-expanded="false"
+          aria-controls={`guide-body-${section.id}`}
+        >
+          <span class="section-emoji">{section.emoji}</span>
+          <span class="section-title">{section.title}</span>
+          <span class="section-count">{section.entries.length} voci</span>
+          <span class="chevron" aria-hidden="true"></span>
+        </button>
+        <div class="section-body" id={`guide-body-${section.id}`} role="region" hidden>
+          {section.intro && <p class="guide-intro">{section.intro}</p>}
+          <div class="guide-cards">
+            {section.entries.map(entry => (
+              <div class="guide-card">
+                <div class="guide-card-head">
+                  <div class="guide-card-titles">
+                    <span class="guide-card-name">{entry.name}</span>
+                    {entry.subtitle && <span class="guide-card-subtitle">{entry.subtitle}</span>}
+                  </div>
+                  {entry.tag && <span class="guide-card-tag">{entry.tag}</span>}
+                </div>
+                <p class="guide-card-desc">{entry.description}</p>
+                {entry.tip && (
+                  <div class="guide-card-tip">
+                    <span class="guide-tip-icon">💡</span>
+                    <span set:html={entry.tip} />
+                  </div>
+                )}
+                {(entry.where || entry.price) && (
+                  <div class="guide-card-meta">
+                    {entry.where && <span class="guide-meta-where">📍 {entry.where}</span>}
+                    {entry.price && <span class="guide-meta-price">{entry.price}</span>}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,56 @@
+---
+// src/components/DaySection.astro
+import type { Day } from '../_data/trip';
+import Stop from './Stop.astro';
+import Banner from './Banner.astro';
+
+interface Props {
+  day: Day;
+  isFirst?: boolean;
+}
+const { day, isFirst = false } = Astro.props;
+
+// Banners da mostrare sopra la timeline (beforeStop === undefined → prima di tutto)
+const topBanners = (day.banners ?? []).filter(b => b.beforeStop === undefined);
+---
+
+<div class={`day-section${isFirst ? ' visible' : ''}`} data-day={day.number} id={`day-${day.number}`}>
+  <div class="day-header">
+    <p class="day-number">Giorno {day.number}</p>
+    <h2 class="day-title" set:html={day.title.replace('\n', '<br>')} />
+    <p class="day-subtitle">{day.subtitle}</p>
+    {day.mapsUrl && (
+      <span>
+        📍 <a class="maps-link" target="_blank" rel="noopener noreferrer" href={day.mapsUrl}>
+          Guarda il percorso su Google Maps!
+        </a>
+      </span>
+    )}
+    <div class="day-pills">
+      {day.pills.map(pill => <span class="pill">{pill}</span>)}
+    </div>
+  </div>
+
+  {/* Banner sopra la timeline (senza beforeStop) */}
+  {topBanners.map(b => <Banner banner={b} dayNumber={day.number} />)}
+
+  <div class="timeline">
+    {day.stops.map((stop, idx) => {
+      // Banner da inserire PRIMA di questa tappa
+      const before = (day.banners ?? []).filter(b => b.beforeStop === idx);
+      return (
+        <>
+          {before.map(b => <Banner banner={b} dayNumber={day.number} />)}
+          <Stop stop={stop} />
+        </>
+      );
+    })}
+  </div>
+
+  {day.bonus && (
+    <div class="bonus-block">
+      <div class="bonus-title" set:html={day.bonus.title} />
+      <p set:html={day.bonus.text} />
+    </div>
+  )}
+</div>

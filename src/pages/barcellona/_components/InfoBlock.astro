@@ -1,0 +1,20 @@
+---
+// src/components/InfoBlock.astro
+import type { InfoBlock } from '../_data/trip';
+
+interface Props {
+  block: InfoBlock;
+}
+const { block } = Astro.props;
+
+const icons: Record<InfoBlock['type'], string> = {
+  tip:     '💡',
+  photo:   '📸',
+  food:    '🍽',
+  warning: '⚠️',
+};
+---
+<div class={`info-block info-block--${block.type}`}>
+  <span class="icon">{icons[block.type]}</span>
+  <span set:html={block.text} />
+</div>

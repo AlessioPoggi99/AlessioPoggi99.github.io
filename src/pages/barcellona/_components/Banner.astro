@@ -1,0 +1,14 @@
+---
+// src/components/Banner.astro
+import type { Banner } from '../_data/trip';
+
+interface Props {
+  banner: Banner;
+  dayNumber: number;
+}
+const { banner, dayNumber } = Astro.props;
+---
+<div class={`banner banner--${banner.type} banner--day${dayNumber}`}>
+  <strong>{banner.title}</strong>
+  {banner.text}
+</div>
