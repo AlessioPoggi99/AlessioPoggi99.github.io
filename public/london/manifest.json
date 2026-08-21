@@ -1,0 +1,49 @@
+{
+  "name": "London",
+  "short_name": "LON",
+  "description": "Guide tour of London",
+  "start_url": "/london/",
+  "scope": "/london/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f3ee",
+  "theme_color": "#1a1612",
+  "lang": "it",
+  "icons": [
+    {
+      "src": "/london/icon144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/london/icon152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/london/icon167.png",
+      "sizes": "167x167",
+      "type": "image/png"
+    },
+    {
+      "src": "/london/icon180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/london/icon192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/london/icon512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/london/icon1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

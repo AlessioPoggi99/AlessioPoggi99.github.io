@@ -1,0 +1,59 @@
+---
+// src/components/Dictionary.astro
+import type { DictSection } from '../_data/dictionary';
+interface Props { sections: DictSection[]; }
+const { sections } = Astro.props;
+---
+<div class="day-section" data-day="dict" id="day-dict">
+  <div class="day-header">
+    <p class="day-number">Reference</p>
+    <h2 class="day-title">UK Slang<br /><em>&amp; Local Lingo</em></h2>
+    <p class="day-subtitle">London is English-speaking, so this isn't a phrasebook — it's a quick guide to the everyday expressions, Tube terms and pub habits you'll actually run into on the trip.</p>
+    <div class="day-pills">
+      <span class="pill">🇬🇧 British English</span>
+      <span class="pill">🗣 Everyday expressions</span>
+      <span class="pill">📖 {sections.reduce((n, s) => n + s.entries.length, 0)} entries</span>
+    </div>
+  </div>
+
+  <div class="sections-list">
+    {sections.map((section, si) => (
+      <div class="section-item">
+        <button
+          class="section-trigger"
+          aria-expanded="false"
+          aria-controls={`dict-body-${section.id}`}
+        >
+          <span class="section-emoji">{section.emoji}</span>
+          <span class="section-title">{section.title}</span>
+          <span class="section-count">{section.entries.length} entries</span>
+          <span class="chevron" aria-hidden="true"></span>
+        </button>
+        <div class="section-body" id={`dict-body-${section.id}`} role="region" hidden>
+          <div class="dict-table-wrap">
+            <table class="dict-table">
+              <thead>
+                <tr>
+                  <th>Term</th>
+                  <th>Meaning</th>
+                  <th>Example</th>
+                  <th class="dict-col-note">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {section.entries.map(entry => (
+                  <tr>
+                    <td class="dict-it">{entry.it}</td>
+                    <td class="dict-es" set:html={entry.es} />
+                    <td class="dict-cat">{entry.cat ?? '—'}</td>
+                    <td class="dict-note">{entry.note ?? ''}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

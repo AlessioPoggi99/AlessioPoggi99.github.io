@@ -1,0 +1,10 @@
+---
+// src/components/Tag.astro
+import type { Tag } from '../_data/trip';
+
+interface Props {
+  tag: Tag;
+}
+const { tag } = Astro.props;
+---
+<span class={`tag tag-${tag.type}`}>{tag.label}</span>
