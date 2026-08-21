@@ -148,6 +148,7 @@ export const days: Day[] = [
     title: "From Buckingham Palace\nto the river at night",
     subtitle:
       "The classic-London day, almost entirely on foot: royal parks and palaces in the morning, world-class museums at midday, then across the river for St Paul's, the Millennium Bridge and a sunset finish at Sky Garden.",
+    mapsUrl: "https://www.google.com/maps/d/edit?mid=1nk8Ld_0D6FyO59Gn3sJLpGDWTaLnrVw&usp=sharing",
     pills: [
       "👑 Buckingham Palace",
       "🖼 National Gallery & British Museum",
@@ -305,6 +306,7 @@ export const days: Day[] = [
     title: "From dinosaurs to the Crown Jewels,\nvia Oxford Street",
     subtitle:
       "A day of contrasts: a morning at the Natural History Museum, an afternoon along London's best-known shopping streets, then east to the Tower of London, Tower Bridge and a night-time view from Western Europe's tallest building.",
+    mapsUrl: "https://www.google.com/maps/d/edit?mid=1IfjspA8nzMo6XiaJuqklcZZXPtUlwtA&usp=sharing",
     pills: [
       "🦕 Natural History Museum",
       "🛍 Oxford & Regent Street",
