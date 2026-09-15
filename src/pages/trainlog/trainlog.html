@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>TrainLog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --g:#4A7C59;--gl:#e8f2ec;--gd:#2d5c3e;
+  --s0:#f0f0ed;--s1:#f7f7f5;--s2:#fff;
+  --tp:#0a0a0a;--ts:#555;--tm:#999;
+  --b:#e2e2de;--bs:#c8c8c4;
+  --r:6px;--sw:250px;--topbar:52px;
+  --pull:#2563eb;--pull-bg:#eff6ff;
+  --push:#e11d48;--push-bg:#fff1f2;
+  --legs:#ca8a04;--legs-bg:#fefce8;
+  --core:#7c3aed;--core-bg:#f5f3ff;
+  --iso:#0891b2;--iso-bg:#ecfeff;
+  --logc:#64748b;--log-bg:#f1f5f9;
+  --danger:#dc2626;
+}
+@media(prefers-color-scheme:dark){:root{
+  --s0:#111;--s1:#1a1a1a;--s2:#222;
+  --tp:#f0f0ee;--ts:#aaa;--tm:#5a5a5a;
+  --b:#2a2a2a;--bs:#3a3a3a;
+  --gl:#162a1f;--gd:#7fc99a;
+  --pull-bg:#16233d;--push-bg:#301019;
+  --legs-bg:#2a2208;--core-bg:#1e1630;--iso-bg:#0b2530;--log-bg:#1c2128;
+}}
+html,body{height:100%;overflow:hidden;font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--s0);color:var(--tp);font-size:14px}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:var(--s2);border-bottom:0.5px solid var(--b);display:flex;align-items:center;gap:10px;padding:0 14px;z-index:60}
+.topbar-logo{font-size:14px;font-weight:600;letter-spacing:-0.5px;color:var(--tp);flex-shrink:0}
+.topbar-logo span{color:var(--g)}
+.topbar-plan{font-size:11px;color:var(--ts);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-year{font-size:11px;font-weight:500;color:var(--tm);flex-shrink:0}
+.btn-icon{background:none;border:none;cursor:pointer;color:var(--ts);padding:6px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;transition:background 0.1s;flex-shrink:0}
+.btn-icon:hover{background:var(--s0);color:var(--tp)}
+
+.layout{display:flex;height:100vh;padding-top:var(--topbar)}
+
+.sidebar{width:var(--sw);background:var(--s1);border-right:0.5px solid var(--b);display:flex;flex-direction:column;height:100%;flex-shrink:0;position:relative;z-index:55}
+.sidebar-body{flex:1;overflow-y:auto;padding:6px 0}
+.sidebar-footer{padding:8px 10px;border-top:0.5px solid var(--b);display:flex;flex-direction:column;gap:4px}
+.btn-sm{padding:7px 10px;font-size:11px;background:none;border:0.5px solid var(--b);border-radius:var(--r);cursor:pointer;color:var(--ts);display:flex;align-items:center;gap:6px;transition:background 0.1s;width:100%}
+.btn-sm:hover{background:var(--s0);color:var(--tp)}
+.btn-sm i{font-size:14px;flex-shrink:0}
+
+.plan-block{border-bottom:0.5px solid var(--b)}
+.plan-header{display:flex;align-items:center;padding:9px 6px 9px 12px;cursor:pointer;gap:6px;user-select:none}
+.plan-header:hover{background:var(--s0)}
+.plan-icon{font-size:12px;color:var(--tm);transition:transform 0.15s;flex-shrink:0}
+.plan-icon.open{transform:rotate(90deg)}
+.plan-name{font-size:11px;font-weight:600;color:var(--tp);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plan-year{font-size:10px;color:var(--tm);flex-shrink:0}
+.btn-icon-sm{background:none;border:none;cursor:pointer;color:var(--tm);padding:4px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.btn-icon-sm:hover{background:var(--push-bg);color:var(--danger)}
+.plan-days{display:none;padding:0 0 4px}
+.plan-days.open{display:block}
+.phase-lbl{padding:8px 12px 3px;font-size:9px;color:var(--tm);font-weight:600;text-transform:uppercase;letter-spacing:0.7px}
+.phase-dates{font-size:9px;color:var(--tm);padding:0 12px 5px;opacity:0.7}
+
+.day-btn{display:flex;align-items:center;width:100%;text-align:left;padding:7px 12px 7px 14px;font-size:11px;color:var(--ts);background:none;border:none;cursor:pointer;border-left:2px solid transparent;gap:6px;transition:all 0.1s}
+.day-btn:hover{background:var(--s0);color:var(--tp)}
+.day-btn.active{background:var(--gl);color:var(--g);border-left-color:var(--g);font-weight:500}
+.day-btn .day-lbl{flex:1;min-width:0}
+.day-btn .day-name{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-btn .day-type{font-size:9px;color:var(--tm);display:block;margin-top:1px}
+.day-btn.active .day-type{color:var(--g);opacity:0.8}
+.week-dots{display:flex;gap:2px;flex-shrink:0}
+.wdot{width:6px;height:6px;border-radius:50%;background:var(--b);border:none;cursor:pointer;padding:0;flex-shrink:0;transition:background 0.1s}
+.wdot.done{background:var(--g)}
+
+.drawer-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:54;backdrop-filter:blur(1px)}
+.drawer-bg.open{display:block}
+@media(max-width:680px){
+  .sidebar{position:fixed;top:var(--topbar);left:0;bottom:0;height:auto;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(.4,0,.2,1);z-index:55}
+  .sidebar.open{transform:translateX(0)}
+}
+
+.main{flex:1;overflow-y:auto;min-width:0}
+.main-inner{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+
+.page-hdr{margin-bottom:14px}
+.phase-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500;background:var(--gl);color:var(--g);margin-bottom:6px}
+.page-hdr h2{font-size:17px;font-weight:600;color:var(--tp);line-height:1.3}
+.page-hdr .sub{font-size:11px;color:var(--ts);margin-top:3px}
+
+.week-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.week-bar{display:flex;gap:4px;flex-wrap:wrap}
+.wk{padding:5px 11px;font-size:11px;background:var(--s2);border:0.5px solid var(--b);border-radius:var(--r);cursor:pointer;color:var(--ts);transition:all 0.1s}
+.wk:hover{border-color:var(--g);color:var(--g)}
+.wk.active{background:var(--g);color:#fff;border-color:var(--g)}
+.wk.done-w{color:var(--tm);text-decoration:line-through}
+.wk.active.done-w{color:#fff;text-decoration:none}
+
+.done-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ts);cursor:pointer;white-space:nowrap}
+.done-toggle input{width:15px;height:15px;accent-color:var(--g);cursor:pointer}
+
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:8px 12px;background:var(--s2);border:0.5px solid var(--b);border-radius:var(--r)}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--ts)}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.section{margin-bottom:22px}
+.section-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:7px;border-bottom:0.5px solid var(--b)}
+.section-title{font-size:10px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:0.7px}
+.rest-hint{font-size:10px;color:var(--tm);font-style:italic;margin-bottom:10px;padding-left:10px;border-left:2px solid var(--b)}
+
+.group-container{background:var(--s2);border:0.5px solid var(--b);border-radius:10px;padding:0;margin-bottom:10px;overflow:hidden}
+.group-header{padding:8px 12px 6px;display:flex;align-items:center;gap:8px;background:var(--s0);border-bottom:0.5px solid var(--b)}
+.group-badge{font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:0.3px;display:flex;align-items:center}
+.badge-circuit{color:#6B5B95;background:#ede8fb}
+.badge-finisher{color:#b05000;background:#fff0e5}
+.group-rest{font-size:10px;color:var(--tm);font-style:italic}
+.group-exercises{display:flex;flex-direction:column}
+.group-ex{padding:10px 12px;border-bottom:0.5px solid var(--b);position:relative;padding-left:15px}
+.group-ex:last-child{border-bottom:none}
+.group-ex::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+
+.ex-card{background:var(--s2);border:0.5px solid var(--b);border-radius:10px;padding:11px 12px;margin-bottom:8px;position:relative;padding-left:15px;transition:border-color 0.1s}
+.ex-card:hover{border-color:var(--bs)}
+.ex-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.cat-pull::before{background:var(--pull)}
+.cat-push::before{background:var(--push)}
+.cat-legs::before{background:var(--legs)}
+.cat-core::before{background:var(--core)}
+.cat-iso::before{background:var(--iso)}
+.cat-log::before{background:var(--logc)}
+
+.ex-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px;gap:8px}
+.ex-name-wrap{flex:1;min-width:0}
+.ex-name{font-size:13px;font-weight:500;color:var(--tp)}
+.ex-muscle{font-size:10px;color:var(--tm);margin-top:2px}
+.iso-tag{font-size:9px;color:var(--iso);font-weight:500;margin-left:5px}
+.ex-prescribed{text-align:right;flex-shrink:0}
+.prescribed-main{font-size:11px;color:var(--ts)}
+.prescribed-load{font-size:12px;font-weight:600;color:var(--g);display:block;margin-top:1px}
+.prescribed-rest{font-size:9px;color:var(--tm)}
+
+.params{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px}
+.param{display:flex;flex-direction:column;gap:2px}
+.param label{font-size:9px;color:var(--tm);font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+.param input{width:100%;padding:6px 7px;font-size:13px;font-weight:500;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s1);color:var(--tp);font-family:inherit;transition:border-color 0.1s}
+.param input::-webkit-outer-spin-button,.param input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.param input:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 2px rgba(74,124,89,0.1)}
+.param input::placeholder{color:var(--tm);font-size:11px;font-weight:400}
+.note-row{margin-top:6px}
+.note-row textarea{width:100%;padding:5px 7px;font-size:11px;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s1);color:var(--tp);font-family:inherit;resize:none;transition:border-color 0.1s}
+.note-row textarea:focus{outline:none;border-color:var(--g)}
+.log-target{font-size:12px;color:var(--g);font-weight:500;margin-bottom:8px;display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.log-target i{margin-top:2px;flex-shrink:0}
+
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:14px;border-top:0.5px solid var(--b)}
+.btn-primary{padding:9px 18px;font-size:12px;font-weight:500;background:var(--g);color:#fff;border:none;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;gap:6px}
+.btn-primary:hover{background:var(--gd)}
+.btn-ghost{padding:9px 12px;font-size:12px;background:none;border:0.5px solid var(--b);border-radius:var(--r);cursor:pointer;color:var(--tm)}
+.btn-ghost:hover{background:var(--s1);color:var(--tp)}
+
+.toast{position:fixed;bottom:20px;right:20px;background:var(--tp);color:var(--s2);padding:8px 16px;border-radius:var(--r);font-size:12px;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:999;display:flex;align-items:center;gap:6px}
+.toast.show{opacity:1}
+
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:var(--s2);border-radius:12px;border:0.5px solid var(--b);padding:22px;width:100%;max-width:440px}
+.modal h3{font-size:14px;font-weight:600;margin-bottom:6px}
+.modal p{font-size:11px;color:var(--ts);margin-bottom:14px;line-height:1.5}
+.modal textarea{width:100%;height:140px;padding:8px;font-size:11px;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s1);color:var(--tp);font-family:monospace;resize:vertical;margin-bottom:10px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--tm)}
+.empty-state i{font-size:36px;opacity:0.3;display:block;margin-bottom:10px}
+.empty-state p{font-size:12px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="btn-icon" id="hamburger" onclick="toggleSidebar()" aria-label="Menu" title="Open menu">
+    <i class="ti ti-menu-2"></i>
+  </button>
+  <div class="topbar-logo">TRAIN<span>LOG</span></div>
+  <div class="topbar-plan" id="topbar-plan">No plan loaded</div>
+  <div class="topbar-year" id="topbar-year"></div>
+</div>
+
+<div class="drawer-bg" id="drawer-bg" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-body" id="nav">
+      <div class="empty-state" style="padding:24px 14px">
+        <i class="ti ti-barbell"></i>
+        <p>Load a plan<br>to get started</p>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <label class="btn-sm"><i class="ti ti-file-upload"></i>Load plan JSON<input type="file" accept=".json" style="display:none" onchange="loadPlanFile(event)"></label>
+      <button class="btn-sm" onclick="openPasteModal()"><i class="ti ti-code"></i>Paste plan JSON</button>
+      <button class="btn-sm" onclick="exportDiary()"><i class="ti ti-download"></i>Export diary</button>
+      <label class="btn-sm"><i class="ti ti-upload"></i>Import diary<input type="file" accept=".json" style="display:none" onchange="importDiary(event)"></label>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="main-inner" id="main-inner">
+      <div class="empty-state" style="padding-top:80px">
+        <i class="ti ti-barbell"></i>
+        <p>Load a training plan to get started<br><span style="font-size:11px;margin-top:4px;display:block">Use the sidebar to load a JSON file</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="ti ti-check"></i><span id="toast-msg"></span></div>
+
+<div class="modal-bg" id="modal-paste" onclick="if(event.target===this)closePasteModal()">
+  <div class="modal">
+    <h3>Paste plan JSON</h3>
+    <p>Paste the plan JSON. Prescribed values will be saved as your actual starting entries — you just overwrite them as you train.</p>
+    <textarea id="paste-area" placeholder='{"name":"Plan...","year":2026,"phases":[...]}'></textarea>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closePasteModal()">Cancel</button>
+      <button class="btn-primary" onclick="parsePasted()"><i class="ti ti-check"></i>Load</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   STORAGE KEYS
+═══════════════════════════════════════════ */
+const S_PLANS = 'tl5_plans';
+const S_DIARY = 'tl5_diary';
+const S_DONE  = 'tl5_done';
+const S_UI    = 'tl5_ui';
+
+let plans = loadJSON(S_PLANS, {});
+let diary = loadJSON(S_DIARY, {});
+let done  = loadJSON(S_DONE, {});
+let ui    = loadJSON(S_UI, {activePlan:null, activeDay:null, activeWeek:1, collapsed:{}});
+
+let activePlan = null;
+let activeDay  = null;
+let activePhase= null;
+
+/* ═══════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════ */
+function loadJSON(k, def){ try{ const r=localStorage.getItem(k); return r?JSON.parse(r):def; }catch(e){ return def; } }
+function saveJSON(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg){ document.getElementById('toast-msg').textContent=msg; const t=document.getElementById('toast'); t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('drawer-bg').classList.toggle('open'); }
+function at(arr, i){ if(!arr) return undefined; return arr[Math.min(i, arr.length-1)]; }
+
+function dk(planId, dayId, week, exId){ return `${planId}||${dayId}||w${week}||${exId}`; }
+function doneKey(planId, dayId, week){ return `${planId}||${dayId}||w${week}`; }
+
+function parseDuration(s){
+  if (s===undefined||s===null||s==='') return '';
+  s = String(s);
+  const mins = s.match(/(\d+)'/);
+  const secs = s.match(/(\d+)"/);
+  if (mins || secs){
+    const m = mins ? parseInt(mins[1]) : 0;
+    const sc = secs ? parseInt(secs[1]) : 0;
+    return String(m*60+sc);
+  }
+  const n = s.replace(/[^0-9]/g,'');
+  return n;
+}
+
+function fmtLoad(ex, value){
+  if (value==='BW' || ex.loadFormat==='bw') return 'BW';
+  switch(ex.loadFormat){
+    case 'addedKg': return `+${value}kg`;
+    case 'kg': return `${value}kg`;
+    case 'kgPerHand': return `${value}kg/hand`;
+    default: return String(value);
+  }
+}
+function inputLoadDefault(ex, value){
+  if (value==='BW' || ex.loadFormat==='bw') return 'BW';
+  return String(value);
+}
+
+/* ═══════════════════════════════════════════
+   PLAN LOADING
+═══════════════════════════════════════════ */
+function loadPlanFile(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>ingestPlan(ev.target.result);
+  r.readAsText(f);
+  e.target.value='';
+}
+function openPasteModal(){ document.getElementById('paste-area').value=''; document.getElementById('modal-paste').classList.add('open'); }
+function closePasteModal(){ document.getElementById('modal-paste').classList.remove('open'); }
+function parsePasted(){ ingestPlan(document.getElementById('paste-area').value); closePasteModal(); }
+
+function ingestPlan(raw){
+  let p;
+  try{ p=JSON.parse(raw); }catch(e){ toast('Invalid JSON'); return; }
+  const id = p.id || ('plan_'+Date.now());
+  p.id = id;
+  plans[id] = p;
+  saveJSON(S_PLANS, plans);
+  writePresets(p);
+  ui.activePlan = id;
+  if (p.phases&&p.phases[0]&&p.phases[0].days&&p.phases[0].days[0]){
+    ui.activeDay = p.phases[0].days[0].id;
+    ui.activeWeek = 1;
+  }
+  ui.collapsed[id] = false;
+  saveJSON(S_UI, ui);
+  loadState();
+  toast('Plan loaded and saved');
+}
+
+function computeDefaults(ex, weekIdx){
+  if (ex.logType){
+    return {note:''};
+  }
+  const sets = at(ex.weekSets, weekIdx);
+  const restSec = parseDuration(ex.rest||'');
+  if (ex.repsScheme==='pyramid'){
+    const start = at(ex.pyramidStart, weekIdx);
+    return {sets:String(sets??''), reps:String(start??''), increment:String(ex.pyramidIncrement??''), rest:String(restSec), note:''};
+  }
+  if (ex.isometric){
+    const hold = at(ex.weekReps, weekIdx);
+    const load = ex.weekLoad ? at(ex.weekLoad, weekIdx) : 'BW';
+    return {sets:String(sets??''), reps:String(hold??''), load: inputLoadDefault(ex, load), rest:String(restSec), note:''};
+  }
+  const reps = at(ex.weekReps, weekIdx);
+  const load = ex.weekLoad ? at(ex.weekLoad, weekIdx) : '';
+  return {sets:String(sets??''), reps:String(reps??''), load: inputLoadDefault(ex, load), rest:String(restSec), note:''};
+}
+
+function writePresets(plan){
+  for (const phase of (plan.phases||[])){
+    const weeks = phase.weeks||6;
+    for (const day of (phase.days||[])){
+      for (let w=1; w<=weeks; w++){
+        for (const section of (day.sections||[])){
+          for (const ex of (section.exercises||[])){
+            const k = dk(plan.id, day.id, w, ex.id);
+            if (!diary[k]){
+              diary[k] = computeDefaults(ex, w-1);
+            }
+          }
+        }
+      }
+    }
+  }
+  saveJSON(S_DIARY, diary);
+}
+
+function getCat(ex){
+  if (ex.logType) return 'log';
+  if (ex.cat) return ex.cat;
+  if (ex.isometric) return 'iso';
+  return 'push';
+}
+
+/* ═══════════════════════════════════════════
+   STATE RESTORE
+═══════════════════════════════════════════ */
+function loadState(){
+  activePlan = ui.activePlan ? plans[ui.activePlan] : null;
+  activeDay = null; activePhase = null;
+  if (activePlan && ui.activeDay){
+    for (const ph of (activePlan.phases||[])){
+      for (const d of (ph.days||[])){
+        if (d.id===ui.activeDay){ activeDay=d; activePhase=ph; break; }
+      }
+      if (activeDay) break;
+    }
+  }
+  buildNav();
+  renderDay();
+  updateTopbar();
+}
+
+function updateTopbar(){
+  document.getElementById('topbar-plan').textContent = activePlan ? activePlan.name : 'No plan loaded';
+  document.getElementById('topbar-year').textContent = activePlan ? (activePlan.year||'') : '';
+}
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+function buildNav(){
+  const nav=document.getElementById('nav');
+  if (!Object.keys(plans).length){
+    nav.innerHTML='<div class="empty-state" style="padding:24px 14px"><i class="ti ti-barbell"></i><p>Load a plan<br>to get started</p></div>';
+    return;
+  }
+  let html='';
+  for (const [pid, p] of Object.entries(plans)){
+    const isOpen = !ui.collapsed[pid];
+    html+=`<div class="plan-block">
+      <div class="plan-header" onclick="togglePlan('${pid}')">
+        <i class="ti ti-chevron-right plan-icon${isOpen?' open':''}"></i>
+        <span class="plan-name">${esc(p.name)}</span>
+        <span class="plan-year">${esc(p.year||'')}</span>
+        <button class="btn-icon-sm" onclick="deletePlan(event,'${pid}')" title="Delete plan" aria-label="Delete plan"><i class="ti ti-trash"></i></button>
+      </div>
+      <div class="plan-days${isOpen?' open':''}">`;
+    for (const phase of (p.phases||[])){
+      html+=`<div class="phase-lbl">${esc(phase.label)}</div><div class="phase-dates">${esc(phase.dates)}</div>`;
+      for (const day of (phase.days||[])){
+        const isActive = (ui.activePlan===pid && activeDay && activeDay.id===day.id);
+        const weeks = phase.weeks||6;
+        html+=`<button class="day-btn${isActive?' active':''}" onclick="selectDay('${pid}','${day.id}')">
+          <div class="day-lbl">
+            <span class="day-name">${esc(day.label)}</span>
+            <span class="day-type">${esc(day.type)}</span>
+          </div>
+          <div class="week-dots">`;
+        for (let w=1; w<=weeks; w++){
+          const isDone = done[doneKey(pid,day.id,w)];
+          html+=`<div class="wdot${isDone?' done':''}" title="Week ${w}${isDone?' — completed':''}" onclick="toggleDone(event,'${pid}','${day.id}',${w})"></div>`;
+        }
+        html+=`</div></button>`;
+      }
+    }
+    html+=`</div></div>`;
+  }
+  nav.innerHTML=html;
+}
+
+function togglePlan(pid){
+  ui.collapsed[pid] = !ui.collapsed[pid];
+  saveJSON(S_UI, ui);
+  buildNav();
+}
+
+function deletePlan(e, pid){
+  e.stopPropagation();
+  const name = plans[pid] ? plans[pid].name : 'this plan';
+  if (!confirm(`Delete "${name}"? This also removes its logged entries. This cannot be undone.`)) return;
+  delete plans[pid];
+  saveJSON(S_PLANS, plans);
+  for (const k of Object.keys(diary)) if (k.startsWith(pid+'||')) delete diary[k];
+  for (const k of Object.keys(done)) if (k.startsWith(pid+'||')) delete done[k];
+  saveJSON(S_DIARY, diary);
+  saveJSON(S_DONE, done);
+  if (ui.activePlan===pid){ ui.activePlan=null; ui.activeDay=null; }
+  delete ui.collapsed[pid];
+  saveJSON(S_UI, ui);
+  loadState();
+  toast('Plan deleted');
+}
+
+function selectDay(planId, dayId){
+  if (activeDay && activeDay.id===dayId && ui.activePlan===planId){
+    if (window.innerWidth<=680) toggleSidebar();
+    return;
+  }
+  saveCurrentDay(true);
+  ui.activePlan = planId;
+  ui.activeDay = dayId;
+  ui.activeWeek = 1;
+  saveJSON(S_UI, ui);
+  loadState();
+  if (window.innerWidth<=680) toggleSidebar();
+}
+
+function toggleDone(e, planId, dayId, week){
+  e.stopPropagation();
+  const k=doneKey(planId, dayId, week);
+  if (done[k]) delete done[k]; else done[k]=true;
+  saveJSON(S_DONE, done);
+  buildNav();
+  if (ui.activePlan===planId && activeDay && activeDay.id===dayId) renderDay();
+}
+
+function toggleDoneCurrent(){
+  if (!activeDay) return;
+  const k = doneKey(ui.activePlan, activeDay.id, ui.activeWeek);
+  if (done[k]) delete done[k]; else done[k]=true;
+  saveJSON(S_DONE, done);
+  buildNav();
+  renderDay();
+}
+
+/* ═══════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════ */
+function prescribedInfo(ex, weekIdx){
+  const sets = at(ex.weekSets, weekIdx);
+  if (ex.repsScheme==='pyramid'){
+    const start = at(ex.pyramidStart, weekIdx);
+    return {main:`${sets} sets`, load:`start ${start}, +${ex.pyramidIncrement}/set`, rest:ex.rest||''};
+  }
+  if (ex.isometric){
+    const hold = at(ex.weekReps, weekIdx);
+    const load = ex.weekLoad ? at(ex.weekLoad, weekIdx) : 'BW';
+    return {main:`${sets}×${hold}s`, load: fmtLoad(ex, load), rest:ex.rest||''};
+  }
+  const reps = at(ex.weekReps, weekIdx);
+  const load = ex.weekLoad ? at(ex.weekLoad, weekIdx) : null;
+  return {main:`${sets}×${reps}`, load: load!==null&&load!==undefined ? fmtLoad(ex,load) : '', rest:ex.rest||''};
+}
+
+function renderDay(){
+  const container=document.getElementById('main-inner');
+  if (!activeDay){
+    container.innerHTML='<div class="empty-state" style="padding-top:80px"><i class="ti ti-barbell"></i><p>Select a day from the sidebar</p></div>';
+    return;
+  }
+  const w=ui.activeWeek;
+  const weekIdx=w-1;
+  const isDone = !!done[doneKey(ui.activePlan, activeDay.id, w)];
+
+  let html=`<div class="page-hdr">
+    <div class="phase-tag">${esc(activePhase.label)}</div>
+    <h2>${esc(activeDay.label)}</h2>
+    <div class="sub">${esc(activeDay.type)} · ${esc(activePhase.dates)}</div>
+  </div>`;
+
+  const weeks=activePhase.weeks||6;
+  let weekBtns='';
+  for (let wk=1; wk<=weeks; wk++){
+    const isActive=wk===w;
+    const wkDone=done[doneKey(ui.activePlan,activeDay.id,wk)];
+    weekBtns+=`<button class="wk${isActive?' active':''}${wkDone&&!isActive?' done-w':''}" onclick="switchWeek(${wk})">W${wk}</button>`;
+  }
+  html+=`<div class="week-row">
+    <div class="week-bar">${weekBtns}</div>
+    <label class="done-toggle">
+      <input type="checkbox" ${isDone?'checked':''} onchange="toggleDoneCurrent()">
+      <span>Week ${w} completed</span>
+    </label>
+  </div>`;
+
+  html+=`<div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--pull)"></div>Pull</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--push)"></div>Push</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--legs)"></div>Legs</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--core)"></div>Core</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--iso)"></div>Isometric</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--logc)"></div>Log</div>
+  </div>`;
+
+  for (const section of (activeDay.sections||[])){
+    html+=`<div class="section"><div class="section-hdr"><span class="section-title">${esc(section.title)}</span></div>`;
+    if (section.restInfo) html+=`<div class="rest-hint"><i class="ti ti-info-circle" style="font-size:11px;margin-right:4px"></i>${esc(section.restInfo)}</div>`;
+
+    const isGroup = section.type==='circuit'||section.type==='finisher';
+    if (isGroup){
+      html+=`<div class="group-container"><div class="group-header">`;
+      if (section.type==='circuit') html+=`<span class="group-badge badge-circuit"><i class="ti ti-repeat" style="font-size:10px;margin-right:3px"></i>Circuit</span>`;
+      else html+=`<span class="group-badge badge-finisher"><i class="ti ti-flame" style="font-size:10px;margin-right:3px"></i>Finisher</span>`;
+      if (section.restInfo) html+=`<span class="group-rest">${esc(section.restInfo)}</span>`;
+      html+=`</div><div class="group-exercises">`;
+      for (const ex of (section.exercises||[])){
+        const cat=getCat(ex);
+        html+=`<div class="group-ex cat-${cat}">${renderExInner(ex, w, weekIdx)}</div>`;
+      }
+      html+=`</div></div>`;
+    } else {
+      for (const ex of (section.exercises||[])){
+        const cat=getCat(ex);
+        html+=`<div class="ex-card cat-${cat}" data-exid="${esc(ex.id)}">${renderExInner(ex, w, weekIdx)}</div>`;
+      }
+    }
+    html+=`</div>`;
+  }
+
+  html+=`<div class="actions">
+    <button class="btn-ghost" onclick="clearDay()">Reset to prescribed</button>
+    <button class="btn-primary" onclick="saveCurrentDay()"><i class="ti ti-device-floppy"></i>Save</button>
+  </div>`;
+
+  container.innerHTML=html;
+}
+
+function renderExInner(ex, week, weekIdx){
+  const k=dk(ui.activePlan, activeDay.id, week, ex.id);
+  const saved=diary[k]||computeDefaults(ex, weekIdx);
+
+  if (ex.logType){
+    const target = at(ex.weekTarget, weekIdx) || '';
+    return `
+      <div class="ex-top">
+        <div class="ex-name-wrap">
+          <div class="ex-name">${esc(ex.name)}</div>
+          <div class="ex-muscle">${esc(ex.muscle||'')}</div>
+        </div>
+      </div>
+      <div class="log-target"><i class="ti ti-target" aria-hidden="true"></i>${esc(target)}</div>
+      <div class="note-row"><textarea rows="2" placeholder="Notes — duration, how it felt, anything worth remembering..." data-field="note" data-exid="${esc(ex.id)}">${esc(saved.note||'')}</textarea></div>`;
+  }
+
+  const presc = prescribedInfo(ex, weekIdx);
+  let p2,p3;
+  if (ex.repsScheme==='pyramid'){
+    p2 = `<div class="param"><label>Start reps</label><input type="text" inputmode="numeric" placeholder="—" value="${esc(saved.reps||'')}" data-field="reps" data-exid="${esc(ex.id)}"></div>`;
+    p3 = `<div class="param"><label>Increment</label><input type="number" inputmode="numeric" placeholder="—" value="${esc(saved.increment||'')}" data-field="increment" data-exid="${esc(ex.id)}"></div>`;
+  } else if (ex.isometric){
+    p2 = `<div class="param"><label>Hold (s)</label><input type="number" inputmode="numeric" placeholder="—" value="${esc(saved.reps||'')}" data-field="reps" data-exid="${esc(ex.id)}"></div>`;
+    p3 = `<div class="param"><label>Load</label><input type="text" inputmode="decimal" placeholder="BW" value="${esc(saved.load||'')}" data-field="load" data-exid="${esc(ex.id)}"></div>`;
+  } else {
+    p2 = `<div class="param"><label>Reps</label><input type="text" inputmode="numeric" placeholder="—" value="${esc(saved.reps||'')}" data-field="reps" data-exid="${esc(ex.id)}"></div>`;
+    p3 = `<div class="param"><label>Load</label><input type="text" inputmode="decimal" placeholder="—" value="${esc(saved.load||'')}" data-field="load" data-exid="${esc(ex.id)}"></div>`;
+  }
+
+  return `
+    <div class="ex-top">
+      <div class="ex-name-wrap">
+        <div class="ex-name">${esc(ex.name)}</div>
+        <div class="ex-muscle">${esc(ex.muscle||'')}${ex.isometric?'<span class="iso-tag">ISO</span>':''}</div>
+      </div>
+      <div class="ex-prescribed">
+        <span class="prescribed-main">${esc(presc.main)}</span>
+        ${presc.load?`<span class="prescribed-load">${esc(presc.load)}</span>`:''}
+        <span class="prescribed-rest">rest ${esc(presc.rest)}</span>
+      </div>
+    </div>
+    <div class="params">
+      <div class="param"><label>Sets</label><input type="number" inputmode="numeric" placeholder="—" value="${esc(saved.sets||'')}" data-field="sets" data-exid="${esc(ex.id)}"></div>
+      ${p2}
+      ${p3}
+      <div class="param"><label>Rest (s)</label><input type="number" inputmode="numeric" placeholder="—" value="${esc(saved.rest||'')}" data-field="rest" data-exid="${esc(ex.id)}"></div>
+    </div>
+    <div class="note-row"><textarea rows="1" placeholder="Notes..." data-field="note" data-exid="${esc(ex.id)}">${esc(saved.note||'')}</textarea></div>`;
+}
+
+/* ═══════════════════════════════════════════
+   SAVE / CLEAR
+═══════════════════════════════════════════ */
+function collectAll(){
+  const data={};
+  document.querySelectorAll('[data-exid][data-field]').forEach(el=>{
+    const id=el.dataset.exid, f=el.dataset.field;
+    if (!data[id]) data[id]={};
+    data[id][f]=el.value;
+  });
+  return data;
+}
+
+function saveCurrentDay(silent=false){
+  if (!activeDay||!ui.activePlan) return;
+  const w=ui.activeWeek;
+  const data=collectAll();
+  for (const [exId, vals] of Object.entries(data)){
+    const k=dk(ui.activePlan, activeDay.id, w, exId);
+    diary[k]={...(diary[k]||{}), ...vals};
+  }
+  saveJSON(S_DIARY, diary);
+  if (!silent) toast('Saved');
+}
+
+function clearDay(){
+  if (!activeDay||!confirm('Reset this day (current week) back to the prescribed values?')) return;
+  const w=ui.activeWeek;
+  for (const section of (activeDay.sections||[])){
+    for (const ex of (section.exercises||[])){
+      const k=dk(ui.activePlan, activeDay.id, w, ex.id);
+      delete diary[k];
+    }
+  }
+  writePresets(activePlan);
+  renderDay();
+  toast('Reset to prescribed values');
+}
+
+function switchWeek(w){
+  saveCurrentDay(true);
+  ui.activeWeek=w;
+  saveJSON(S_UI, ui);
+  renderDay();
+}
+
+/* ═══════════════════════════════════════════
+   EXPORT / IMPORT
+═══════════════════════════════════════════ */
+function exportDiary(){
+  saveCurrentDay(true);
+  const instructionsForAI = {
+    purpose: "This file is a workout diary exported from TrainLog. It contains the training plan(s) as originally prescribed, plus the actual values the athlete logged for each session. Read this block fully before interpreting the data below.",
+    structure: {
+      plans: "Dictionary of loaded plans keyed by plan id. Each plan has phases > days > sections > exercises with the PRESCRIBED programming: weekSets/weekReps/weekLoad/pyramidStart/weekTarget are arrays indexed by week number (array index 0 = week 1, index 5 = week 6, etc). 'rest' is a human-readable duration string like \"2'30\\\"\" meaning 2 minutes 30 seconds, or \"30\\\"\" meaning 30 seconds.",
+      diary: "Actual logged entries, keyed as 'planId||dayId||wWEEKNUM||exerciseId' (e.g. 'plan_123||A_mon||w3||pullups_weighted_mon' = week 3 entry for that exercise on that day of that plan). Each entry reflects what the athlete ACTUALLY did that session, which may differ from the plan's prescribed values — always compare diary values against the matching plan values for that same week to assess adherence, overreach, or underperformance.",
+      done: "Keyed like diary entries but without the exercise id ('planId||dayId||wWEEKNUM'). A value of true means the athlete marked that week's session for that day as completed. Absence of a key, or false, means not marked complete — this does NOT necessarily mean the session wasn't done, just that it wasn't checked off."
+    },
+    fieldMeanings: {
+      sets: "Number of sets actually performed.",
+      reps: "Reps actually performed for standard exercises. For ISOMETRIC exercises (isometric:true in the plan) this field is HOLD TIME IN SECONDS, not a rep count. The text 'AMRAP-2' means as many reps as possible minus a 2-rep buffer — treat it as a training instruction, not a number to do further math on. For PYRAMID-scheme exercises (repsScheme:'pyramid' in the plan) this field is the STARTING rep count of the first set only.",
+      increment: "Only present on pyramid-scheme exercises: how many reps are added on each subsequent set. Example: sets=4, reps(start)=8, increment=2 means the four sets were roughly 8, 10, 12, 14 reps.",
+      load: "'BW' means bodyweight only, no added load. A plain number is in kilograms. Check the exercise's 'loadFormat' in the plan definition to know what the number means: 'addedKg' = extra weight added on top of bodyweight (weighted pull-ups/dips/chin-ups), 'kg' = absolute barbell load (squat, military press, row, RDL), 'kgPerHand' = dumbbell load held in each hand (Bulgarian split squat), 'bw' = always bodyweight regardless of the number shown.",
+      rest: "Rest actually taken, always in seconds regardless of exercise type, even though the plan displays it as a human-readable string like 2'30\".",
+      note: "Free-text note the athlete added for that specific exercise on that specific day/week. For log-type entries (Padel, Run, Rest day — identified by logType:true in the plan) this is the ONLY field used, since those entries have no sets/reps/load and are instead logged against a weekly qualitative target in the plan's 'weekTarget' array."
+    },
+    otherNotes: [
+      "Empty string values ('') mean the athlete did not log that field for that session. Treat as missing data, not as zero.",
+      "The 'cat' field on each exercise (pull/push/legs/core/iso/log) is purely for color-coding the muscle group in the app UI and carries no programming meaning.",
+      "Day ids follow calendar order (Monday through Sunday) but are not necessarily named after the weekday in every plan version — always check the day's 'label' field for the human-readable name.",
+      "When asked to review progress or adjust the plan, compare each diary entry to its corresponding plan entry for the same week number, not just to the previous week's diary entry."
+    ]
+  };
+  const exp={instructionsForAI, v:6, ts:Date.now(), plans, diary, done};
+  const blob=new Blob([JSON.stringify(exp,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`trainlog_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('Exported');
+}
+
+function importDiary(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const p=JSON.parse(ev.target.result);
+      if (p.plans) { plans={...plans,...p.plans}; saveJSON(S_PLANS,plans); }
+      if (p.diary) { diary={...diary,...p.diary}; saveJSON(S_DIARY,diary); }
+      if (p.done)  { done={...done,...p.done};   saveJSON(S_DONE,done); }
+      loadState();
+      toast('Imported');
+    }catch(e){ toast('Could not read that file'); }
+  };
+  r.readAsText(f);
+  e.target.value='';
+}
+
+loadState();
+</script>
+</body>
+</html>
