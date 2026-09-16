@@ -1,14 +1,12 @@
+---
+// Place this file at src/pages/trainlog.astro to make it available at /trainlog
+// No frontmatter logic needed — this page is fully static/client-side.
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link rel="manifest" href="/trainlog/manifest.json" />
-<meta name="theme-color" content="#4A7C59" />
-<meta name="mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>TrainLog</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style is:global>
@@ -100,7 +98,7 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',-apple-system,BlinkMac
 .wk:hover{border-color:var(--g);color:var(--g)}
 .wk.active{background:var(--g);color:#fff;border-color:var(--g)}
 .wk.done-w{color:var(--tm);text-decoration:line-through}
-.wk.active.done-w{color:#fff;text-decoration:none}
+.wk.active.done-w{background:var(--gd);border-color:var(--gd);color:#fff;text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.65);text-decoration-thickness:1.5px}
 
 .done-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ts);cursor:pointer;white-space:nowrap}
 .done-toggle input{width:15px;height:15px;accent-color:var(--g);cursor:pointer}
@@ -148,17 +146,22 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',-apple-system,BlinkMac
 .params{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px}
 .param{display:flex;flex-direction:column;gap:2px}
 .param label{font-size:9px;color:var(--tm);font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
-.param input{width:100%;padding:6px 7px;font-size:13px;font-weight:500;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s1);color:var(--tp);font-family:inherit;transition:border-color 0.1s}
+.param input{width:100%;padding:6px 7px;font-size:13px;font-weight:500;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s1);color:var(--tp);font-family:inherit;transition:border-color 0.2s,box-shadow 0.2s}
 .param input::-webkit-outer-spin-button,.param input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .param input:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 2px rgba(74,124,89,0.1)}
 .param input::placeholder{color:var(--tm);font-size:11px;font-weight:400}
+.param input.just-saved,.note-row textarea.just-saved,.day-note-textarea.just-saved{border-color:var(--g);box-shadow:0 0 0 2px rgba(74,124,89,0.15)}
 .note-row{margin-top:6px}
-.note-row textarea{width:100%;padding:5px 7px;font-size:11px;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s1);color:var(--tp);font-family:inherit;resize:none;transition:border-color 0.1s}
+.note-row textarea{width:100%;padding:5px 7px;font-size:11px;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s1);color:var(--tp);font-family:inherit;resize:none;transition:border-color 0.2s,box-shadow 0.2s}
 .note-row textarea:focus{outline:none;border-color:var(--g)}
 .log-target{font-size:12px;color:var(--g);font-weight:500;margin-bottom:8px;display:flex;align-items:flex-start;gap:6px;line-height:1.4}
 .log-target i{margin-top:2px;flex-shrink:0}
 
-.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:14px;border-top:0.5px solid var(--b)}
+.day-note-textarea{width:100%;padding:9px 10px;font-size:12px;border:0.5px solid var(--b);border-radius:var(--r);background:var(--s2);color:var(--tp);font-family:inherit;resize:vertical;min-height:70px;transition:border-color 0.2s,box-shadow 0.2s}
+.day-note-textarea:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 2px rgba(74,124,89,0.1)}
+
+.actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:20px;padding-top:14px;border-top:0.5px solid var(--b)}
+.autosave-hint{font-size:11px;color:var(--tm);display:flex;align-items:center;gap:5px}
 .btn-primary{padding:9px 18px;font-size:12px;font-weight:500;background:var(--g);color:#fff;border:none;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;gap:6px}
 .btn-primary:hover{background:var(--gd)}
 .btn-ghost{padding:9px 12px;font-size:12px;background:none;border:0.5px solid var(--b);border-radius:var(--r);cursor:pointer;color:var(--tm)}
@@ -202,10 +205,13 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',-apple-system,BlinkMac
       </div>
     </div>
     <div class="sidebar-footer">
-      <label class="btn-sm"><i class="ti ti-file-upload"></i>Load plan JSON<input type="file" accept=".json" style="display:none" onchange="loadPlanFile(event)"></label>
+      <label class="btn-sm"><i class="ti ti-file-upload"></i>Load plan JSON<input type="file" accept=".json" style="display:none" onchange="loadFileInput(event)"></label>
       <button class="btn-sm" onclick="openPasteModal()"><i class="ti ti-code"></i>Paste plan JSON</button>
       <button class="btn-sm" onclick="exportDiary()"><i class="ti ti-download"></i>Export diary</button>
-      <label class="btn-sm"><i class="ti ti-upload"></i>Import diary<input type="file" accept=".json" style="display:none" onchange="importDiary(event)"></label>
+      <label class="btn-sm"><i class="ti ti-upload"></i>Import diary<input type="file" accept=".json" style="display:none" onchange="loadFileInput(event)"></label>
+    </div>
+	<div class="sidebar-footer">
+      <label class="topbar-year" style="text-align:center;">v. 0.2</label>
     </div>
   </div>
 
@@ -224,7 +230,7 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',-apple-system,BlinkMac
 <div class="modal-bg" id="modal-paste" onclick="if(event.target===this)closePasteModal()">
   <div class="modal">
     <h3>Paste plan JSON</h3>
-    <p>Paste the plan JSON. Prescribed values will be saved as your actual starting entries — you just overwrite them as you train.</p>
+    <p>Paste a plan JSON or a full diary export — both use the same format. Prescribed values are saved as real starting entries; you just overwrite them as you train.</p>
     <textarea id="paste-area" placeholder='{"name":"Plan...","year":2026,"phases":[...]}'></textarea>
     <div class="modal-actions">
       <button class="btn-ghost" onclick="closePasteModal()">Cancel</button>
@@ -235,34 +241,104 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',-apple-system,BlinkMac
 
 <script is:inline>
 /* ═══════════════════════════════════════════
-   STORAGE KEYS
+   STORAGE — granular key-per-entry model.
+   Each diary entry, done flag, and day note is
+   its own localStorage key, so saving one value
+   never touches unrelated data. This maps 1:1
+   onto a future relational table:
+     diary_entries(plan_id, day_id, week, exercise_id, ...)
+     week_done(plan_id, day_id, week)
+     day_notes(plan_id, day_id, week, note)
+     plans(id, json_data)
 ═══════════════════════════════════════════ */
-const S_PLANS = 'tl5_plans';
-const S_DIARY = 'tl5_diary';
-const S_DONE  = 'tl5_done';
-const S_UI    = 'tl5_ui';
+const NS = 'tl6';
+const P_PLAN  = `${NS}_plan||`;
+const P_ENTRY = `${NS}_entry||`;
+const P_DONE  = `${NS}_done||`;
+const P_NOTE  = `${NS}_note||`;
+const S_ORDER = `${NS}_planOrder`;
+const S_UI    = `${NS}_ui`;
 
-let plans = loadJSON(S_PLANS, {});
-let diary = loadJSON(S_DIARY, {});
-let done  = loadJSON(S_DONE, {});
-let ui    = loadJSON(S_UI, {activePlan:null, activeDay:null, activeWeek:1, collapsed:{}});
+function planKey(id){ return P_PLAN + id; }
+function entryKey(planId,dayId,week,exId){ return P_ENTRY + [planId,dayId,'w'+week,exId].join('||'); }
+function doneKey(planId,dayId,week){ return P_DONE + [planId,dayId,'w'+week].join('||'); }
+function noteKey(planId,dayId,week){ return P_NOTE + [planId,dayId,'w'+week].join('||'); }
+
+function loadJSON(k, def){ try{ const r=localStorage.getItem(k); return r?JSON.parse(r):def; }catch(e){ return def; } }
+function saveJSON(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+function loadPlanOrder(){ return loadJSON(S_ORDER, []); }
+function savePlanOrder(order){ saveJSON(S_ORDER, order); }
+
+function readEntry(planId,dayId,week,exId){
+  try{ const r=localStorage.getItem(entryKey(planId,dayId,week,exId)); return r?JSON.parse(r):null; }catch(e){ return null; }
+}
+function writeEntry(planId,dayId,week,exId,data){
+  try{ localStorage.setItem(entryKey(planId,dayId,week,exId), JSON.stringify(data)); }catch(e){}
+}
+function readDone(planId,dayId,week){ return localStorage.getItem(doneKey(planId,dayId,week))==='1'; }
+function writeDone(planId,dayId,week,val){
+  const k=doneKey(planId,dayId,week);
+  if (val) localStorage.setItem(k,'1'); else localStorage.removeItem(k);
+}
+function readNote(planId,dayId,week){ try{ return localStorage.getItem(noteKey(planId,dayId,week)) || ''; }catch(e){ return ''; } }
+function writeNote(planId,dayId,week,text){
+  const k=noteKey(planId,dayId,week);
+  if (text) localStorage.setItem(k, text); else localStorage.removeItem(k);
+}
+
+function getAllByPrefixJSON(prefix){
+  const out={};
+  for (let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if (k && k.startsWith(prefix)){
+      try{ out[k.slice(prefix.length)] = JSON.parse(localStorage.getItem(k)); }catch(e){}
+    }
+  }
+  return out;
+}
+function getAllByPrefixRaw(prefix){
+  const out={};
+  for (let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if (k && k.startsWith(prefix)) out[k.slice(prefix.length)] = localStorage.getItem(k);
+  }
+  return out;
+}
+function removeAllByPrefix(prefix){
+  const toRemove=[];
+  for (let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if (k && k.startsWith(prefix)) toRemove.push(k);
+  }
+  toRemove.forEach(k=>localStorage.removeItem(k));
+}
+
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let plans = {};
+let ui = loadJSON(S_UI, {activePlan:null, activeDay:null, activeWeek:1, collapsed:{}});
 
 let activePlan = null;
 let activeDay  = null;
 let activePhase= null;
 
+function bootLoadPlans(){
+  plans = {};
+  for (const id of loadPlanOrder()){
+    const raw = localStorage.getItem(planKey(id));
+    if (raw){ try{ plans[id] = JSON.parse(raw); }catch(e){} }
+  }
+}
+
 /* ═══════════════════════════════════════════
    UTILS
 ═══════════════════════════════════════════ */
-function loadJSON(k, def){ try{ const r=localStorage.getItem(k); return r?JSON.parse(r):def; }catch(e){ return def; } }
-function saveJSON(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function toast(msg){ document.getElementById('toast-msg').textContent=msg; const t=document.getElementById('toast'); t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
 function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('drawer-bg').classList.toggle('open'); }
 function at(arr, i){ if(!arr) return undefined; return arr[Math.min(i, arr.length-1)]; }
-
-function dk(planId, dayId, week, exId){ return `${planId}||${dayId}||w${week}||${exId}`; }
-function doneKey(planId, dayId, week){ return `${planId}||${dayId}||w${week}`; }
 
 function parseDuration(s){
   if (s===undefined||s===null||s==='') return '';
@@ -274,8 +350,7 @@ function parseDuration(s){
     const sc = secs ? parseInt(secs[1]) : 0;
     return String(m*60+sc);
   }
-  const n = s.replace(/[^0-9]/g,'');
-  return n;
+  return s.replace(/[^0-9]/g,'');
 }
 
 function fmtLoad(ex, value){
@@ -292,43 +367,20 @@ function inputLoadDefault(ex, value){
   return String(value);
 }
 
+function getCat(ex){
+  if (ex.logType) return 'log';
+  if (ex.cat) return ex.cat;
+  if (ex.isometric) return 'iso';
+  return 'push';
+}
+
 /* ═══════════════════════════════════════════
-   PLAN LOADING
+   PRESCRIBED DEFAULTS (written once per exercise/week
+   the first time a plan is loaded; never overwrites
+   an existing logged entry)
 ═══════════════════════════════════════════ */
-function loadPlanFile(e){
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=ev=>ingestPlan(ev.target.result);
-  r.readAsText(f);
-  e.target.value='';
-}
-function openPasteModal(){ document.getElementById('paste-area').value=''; document.getElementById('modal-paste').classList.add('open'); }
-function closePasteModal(){ document.getElementById('modal-paste').classList.remove('open'); }
-function parsePasted(){ ingestPlan(document.getElementById('paste-area').value); closePasteModal(); }
-
-function ingestPlan(raw){
-  let p;
-  try{ p=JSON.parse(raw); }catch(e){ toast('Invalid JSON'); return; }
-  const id = p.id || ('plan_'+Date.now());
-  p.id = id;
-  plans[id] = p;
-  saveJSON(S_PLANS, plans);
-  writePresets(p);
-  ui.activePlan = id;
-  if (p.phases&&p.phases[0]&&p.phases[0].days&&p.phases[0].days[0]){
-    ui.activeDay = p.phases[0].days[0].id;
-    ui.activeWeek = 1;
-  }
-  ui.collapsed[id] = false;
-  saveJSON(S_UI, ui);
-  loadState();
-  toast('Plan loaded and saved');
-}
-
 function computeDefaults(ex, weekIdx){
-  if (ex.logType){
-    return {note:''};
-  }
+  if (ex.logType) return {note:''};
   const sets = at(ex.weekSets, weekIdx);
   const restSec = parseDuration(ex.rest||'');
   if (ex.repsScheme==='pyramid'){
@@ -352,23 +404,86 @@ function writePresets(plan){
       for (let w=1; w<=weeks; w++){
         for (const section of (day.sections||[])){
           for (const ex of (section.exercises||[])){
-            const k = dk(plan.id, day.id, w, ex.id);
-            if (!diary[k]){
-              diary[k] = computeDefaults(ex, w-1);
+            const k = entryKey(plan.id, day.id, w, ex.id);
+            if (localStorage.getItem(k)===null){
+              try{ localStorage.setItem(k, JSON.stringify(computeDefaults(ex, w-1))); }catch(e){}
             }
           }
         }
       }
     }
   }
-  saveJSON(S_DIARY, diary);
 }
 
-function getCat(ex){
-  if (ex.logType) return 'log';
-  if (ex.cat) return ex.cat;
-  if (ex.isometric) return 'iso';
-  return 'push';
+/* ═══════════════════════════════════════════
+   INGEST — unified for plan-only files AND full
+   diary exports; same schema either way.
+═══════════════════════════════════════════ */
+function loadFileInput(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>ingestFile(ev.target.result);
+  r.readAsText(f);
+  e.target.value='';
+}
+function openPasteModal(){ document.getElementById('paste-area').value=''; document.getElementById('modal-paste').classList.add('open'); }
+function closePasteModal(){ document.getElementById('modal-paste').classList.remove('open'); }
+function parsePasted(){ ingestFile(document.getElementById('paste-area').value); closePasteModal(); }
+
+function ingestFile(raw){
+  let p;
+  try{ p=JSON.parse(raw); }catch(e){ toast('Invalid JSON'); return; }
+
+  let incomingPlans={}, incomingDiary={}, incomingDone={}, incomingNotes={};
+  if (p.phases && p.name){
+    const id = p.id || ('plan_'+Date.now());
+    p.id = id;
+    incomingPlans[id]=p;
+  } else {
+    incomingPlans = p.plans || {};
+    incomingDiary = p.diary || {};
+    incomingDone  = p.done || {};
+    incomingNotes = p.dayNotes || {};
+  }
+
+  const order = loadPlanOrder();
+  for (const [id, planObj] of Object.entries(incomingPlans)){
+    planObj.id = id;
+    try{ localStorage.setItem(planKey(id), JSON.stringify(planObj)); }catch(e){}
+    if (!order.includes(id)) order.push(id);
+    plans[id] = planObj;
+  }
+  savePlanOrder(order);
+
+  for (const [ck, val] of Object.entries(incomingDiary)){
+    try{ localStorage.setItem(P_ENTRY+ck, JSON.stringify(val)); }catch(e){}
+  }
+  for (const [ck, val] of Object.entries(incomingDone)){
+    if (val) localStorage.setItem(P_DONE+ck, '1');
+  }
+  for (const [ck, val] of Object.entries(incomingNotes)){
+    if (val) localStorage.setItem(P_NOTE+ck, val);
+  }
+
+  for (const planObj of Object.values(incomingPlans)) writePresets(planObj);
+
+  if (!ui.activePlan){
+    const firstId = Object.keys(incomingPlans)[0];
+    if (firstId){
+      const pl = plans[firstId];
+      ui.activePlan = firstId;
+      if (pl.phases && pl.phases[0] && pl.phases[0].days && pl.phases[0].days[0]){
+        ui.activeDay = pl.phases[0].days[0].id;
+        ui.activeWeek = 1;
+      }
+    }
+  }
+  saveJSON(S_UI, ui);
+  loadState();
+
+  const nPlans = Object.keys(incomingPlans).length;
+  const nDiary = Object.keys(incomingDiary).length;
+  toast(nDiary ? 'Diary imported' : (nPlans ? 'Plan loaded and saved' : 'Nothing to import'));
 }
 
 /* ═══════════════════════════════════════════
@@ -376,7 +491,7 @@ function getCat(ex){
 ═══════════════════════════════════════════ */
 function loadState(){
   activePlan = ui.activePlan ? plans[ui.activePlan] : null;
-  activeDay = null; activePhase = null;
+  activeDay=null; activePhase=null;
   if (activePlan && ui.activeDay){
     for (const ph of (activePlan.phases||[])){
       for (const d of (ph.days||[])){
@@ -389,7 +504,6 @@ function loadState(){
   renderDay();
   updateTopbar();
 }
-
 function updateTopbar(){
   document.getElementById('topbar-plan').textContent = activePlan ? activePlan.name : 'No plan loaded';
   document.getElementById('topbar-year').textContent = activePlan ? (activePlan.year||'') : '';
@@ -400,12 +514,14 @@ function updateTopbar(){
 ═══════════════════════════════════════════ */
 function buildNav(){
   const nav=document.getElementById('nav');
-  if (!Object.keys(plans).length){
+  const order = loadPlanOrder();
+  if (!order.length){
     nav.innerHTML='<div class="empty-state" style="padding:24px 14px"><i class="ti ti-barbell"></i><p>Load a plan<br>to get started</p></div>';
     return;
   }
   let html='';
-  for (const [pid, p] of Object.entries(plans)){
+  for (const pid of order){
+    const p = plans[pid]; if (!p) continue;
     const isOpen = !ui.collapsed[pid];
     html+=`<div class="plan-block">
       <div class="plan-header" onclick="togglePlan('${pid}')">
@@ -418,16 +534,13 @@ function buildNav(){
     for (const phase of (p.phases||[])){
       html+=`<div class="phase-lbl">${esc(phase.label)}</div><div class="phase-dates">${esc(phase.dates)}</div>`;
       for (const day of (phase.days||[])){
-        const isActive = (ui.activePlan===pid && activeDay && activeDay.id===day.id);
-        const weeks = phase.weeks||6;
+        const isActive=(ui.activePlan===pid && activeDay && activeDay.id===day.id);
+        const weeks=phase.weeks||6;
         html+=`<button class="day-btn${isActive?' active':''}" onclick="selectDay('${pid}','${day.id}')">
-          <div class="day-lbl">
-            <span class="day-name">${esc(day.label)}</span>
-            <span class="day-type">${esc(day.type)}</span>
-          </div>
+          <div class="day-lbl"><span class="day-name">${esc(day.label)}</span><span class="day-type">${esc(day.type)}</span></div>
           <div class="week-dots">`;
         for (let w=1; w<=weeks; w++){
-          const isDone = done[doneKey(pid,day.id,w)];
+          const isDone = readDone(pid, day.id, w);
           html+=`<div class="wdot${isDone?' done':''}" title="Week ${w}${isDone?' — completed':''}" onclick="toggleDone(event,'${pid}','${day.id}',${w})"></div>`;
         }
         html+=`</div></button>`;
@@ -438,22 +551,19 @@ function buildNav(){
   nav.innerHTML=html;
 }
 
-function togglePlan(pid){
-  ui.collapsed[pid] = !ui.collapsed[pid];
-  saveJSON(S_UI, ui);
-  buildNav();
-}
+function togglePlan(pid){ ui.collapsed[pid]=!ui.collapsed[pid]; saveJSON(S_UI,ui); buildNav(); }
 
 function deletePlan(e, pid){
   e.stopPropagation();
   const name = plans[pid] ? plans[pid].name : 'this plan';
   if (!confirm(`Delete "${name}"? This also removes its logged entries. This cannot be undone.`)) return;
   delete plans[pid];
-  saveJSON(S_PLANS, plans);
-  for (const k of Object.keys(diary)) if (k.startsWith(pid+'||')) delete diary[k];
-  for (const k of Object.keys(done)) if (k.startsWith(pid+'||')) delete done[k];
-  saveJSON(S_DIARY, diary);
-  saveJSON(S_DONE, done);
+  localStorage.removeItem(planKey(pid));
+  removeAllByPrefix(P_ENTRY+pid+'||');
+  removeAllByPrefix(P_DONE+pid+'||');
+  removeAllByPrefix(P_NOTE+pid+'||');
+  const order = loadPlanOrder().filter(id=>id!==pid);
+  savePlanOrder(order);
   if (ui.activePlan===pid){ ui.activePlan=null; ui.activeDay=null; }
   delete ui.collapsed[pid];
   saveJSON(S_UI, ui);
@@ -466,10 +576,7 @@ function selectDay(planId, dayId){
     if (window.innerWidth<=680) toggleSidebar();
     return;
   }
-  saveCurrentDay(true);
-  ui.activePlan = planId;
-  ui.activeDay = dayId;
-  ui.activeWeek = 1;
+  ui.activePlan=planId; ui.activeDay=dayId; ui.activeWeek=1;
   saveJSON(S_UI, ui);
   loadState();
   if (window.innerWidth<=680) toggleSidebar();
@@ -477,18 +584,13 @@ function selectDay(planId, dayId){
 
 function toggleDone(e, planId, dayId, week){
   e.stopPropagation();
-  const k=doneKey(planId, dayId, week);
-  if (done[k]) delete done[k]; else done[k]=true;
-  saveJSON(S_DONE, done);
+  writeDone(planId, dayId, week, !readDone(planId,dayId,week));
   buildNav();
   if (ui.activePlan===planId && activeDay && activeDay.id===dayId) renderDay();
 }
-
 function toggleDoneCurrent(){
   if (!activeDay) return;
-  const k = doneKey(ui.activePlan, activeDay.id, ui.activeWeek);
-  if (done[k]) delete done[k]; else done[k]=true;
-  saveJSON(S_DONE, done);
+  writeDone(ui.activePlan, activeDay.id, ui.activeWeek, !readDone(ui.activePlan, activeDay.id, ui.activeWeek));
   buildNav();
   renderDay();
 }
@@ -518,9 +620,8 @@ function renderDay(){
     container.innerHTML='<div class="empty-state" style="padding-top:80px"><i class="ti ti-barbell"></i><p>Select a day from the sidebar</p></div>';
     return;
   }
-  const w=ui.activeWeek;
-  const weekIdx=w-1;
-  const isDone = !!done[doneKey(ui.activePlan, activeDay.id, w)];
+  const w=ui.activeWeek, weekIdx=w-1;
+  const isDone = readDone(ui.activePlan, activeDay.id, w);
 
   let html=`<div class="page-hdr">
     <div class="phase-tag">${esc(activePhase.label)}</div>
@@ -532,15 +633,12 @@ function renderDay(){
   let weekBtns='';
   for (let wk=1; wk<=weeks; wk++){
     const isActive=wk===w;
-    const wkDone=done[doneKey(ui.activePlan,activeDay.id,wk)];
-    weekBtns+=`<button class="wk${isActive?' active':''}${wkDone&&!isActive?' done-w':''}" onclick="switchWeek(${wk})">W${wk}</button>`;
+    const wkDone=readDone(ui.activePlan,activeDay.id,wk);
+    weekBtns+=`<button class="wk${isActive?' active':''}${wkDone?' done-w':''}" onclick="switchWeek(${wk})">W${wk}</button>`;
   }
   html+=`<div class="week-row">
     <div class="week-bar">${weekBtns}</div>
-    <label class="done-toggle">
-      <input type="checkbox" ${isDone?'checked':''} onchange="toggleDoneCurrent()">
-      <span>Week ${w} completed</span>
-    </label>
+    <label class="done-toggle"><input type="checkbox" ${isDone?'checked':''} onchange="toggleDoneCurrent()"><span>Week ${w} completed</span></label>
   </div>`;
 
   html+=`<div class="legend">
@@ -555,7 +653,6 @@ function renderDay(){
   for (const section of (activeDay.sections||[])){
     html+=`<div class="section"><div class="section-hdr"><span class="section-title">${esc(section.title)}</span></div>`;
     if (section.restInfo) html+=`<div class="rest-hint"><i class="ti ti-info-circle" style="font-size:11px;margin-right:4px"></i>${esc(section.restInfo)}</div>`;
-
     const isGroup = section.type==='circuit'||section.type==='finisher';
     if (isGroup){
       html+=`<div class="group-container"><div class="group-header">`;
@@ -564,45 +661,45 @@ function renderDay(){
       if (section.restInfo) html+=`<span class="group-rest">${esc(section.restInfo)}</span>`;
       html+=`</div><div class="group-exercises">`;
       for (const ex of (section.exercises||[])){
-        const cat=getCat(ex);
-        html+=`<div class="group-ex cat-${cat}">${renderExInner(ex, w, weekIdx)}</div>`;
+        html+=`<div class="group-ex cat-${getCat(ex)}">${renderExInner(ex, w, weekIdx)}</div>`;
       }
       html+=`</div></div>`;
     } else {
       for (const ex of (section.exercises||[])){
-        const cat=getCat(ex);
-        html+=`<div class="ex-card cat-${cat}" data-exid="${esc(ex.id)}">${renderExInner(ex, w, weekIdx)}</div>`;
+        html+=`<div class="ex-card cat-${getCat(ex)}">${renderExInner(ex, w, weekIdx)}</div>`;
       }
     }
     html+=`</div>`;
   }
 
+  const dayNote = readNote(ui.activePlan, activeDay.id, w);
+  html+=`<div class="section">
+    <div class="section-hdr"><span class="section-title">Day notes</span></div>
+    <textarea class="day-note-textarea" placeholder="Overall thoughts on this session — how it went, anything you changed, extra work you did..." data-daynote="1">${esc(dayNote)}</textarea>
+  </div>`;
+
   html+=`<div class="actions">
+    <span class="autosave-hint"><i class="ti ti-cloud-check"></i>Changes save automatically</span>
     <button class="btn-ghost" onclick="clearDay()">Reset to prescribed</button>
-    <button class="btn-primary" onclick="saveCurrentDay()"><i class="ti ti-device-floppy"></i>Save</button>
   </div>`;
 
   container.innerHTML=html;
 }
 
 function renderExInner(ex, week, weekIdx){
-  const k=dk(ui.activePlan, activeDay.id, week, ex.id);
-  const saved=diary[k]||computeDefaults(ex, weekIdx);
-
   if (ex.logType){
     const target = at(ex.weekTarget, weekIdx) || '';
+    const saved = readEntry(ui.activePlan, activeDay.id, week, ex.id) || computeDefaults(ex, weekIdx);
     return `
       <div class="ex-top">
-        <div class="ex-name-wrap">
-          <div class="ex-name">${esc(ex.name)}</div>
-          <div class="ex-muscle">${esc(ex.muscle||'')}</div>
-        </div>
+        <div class="ex-name-wrap"><div class="ex-name">${esc(ex.name)}</div><div class="ex-muscle">${esc(ex.muscle||'')}</div></div>
       </div>
       <div class="log-target"><i class="ti ti-target" aria-hidden="true"></i>${esc(target)}</div>
       <div class="note-row"><textarea rows="2" placeholder="Notes — duration, how it felt, anything worth remembering..." data-field="note" data-exid="${esc(ex.id)}">${esc(saved.note||'')}</textarea></div>`;
   }
 
   const presc = prescribedInfo(ex, weekIdx);
+  const saved = readEntry(ui.activePlan, activeDay.id, week, ex.id) || computeDefaults(ex, weekIdx);
   let p2,p3;
   if (ex.repsScheme==='pyramid'){
     p2 = `<div class="param"><label>Start reps</label><input type="text" inputmode="numeric" placeholder="—" value="${esc(saved.reps||'')}" data-field="reps" data-exid="${esc(ex.id)}"></div>`;
@@ -614,7 +711,6 @@ function renderExInner(ex, week, weekIdx){
     p2 = `<div class="param"><label>Reps</label><input type="text" inputmode="numeric" placeholder="—" value="${esc(saved.reps||'')}" data-field="reps" data-exid="${esc(ex.id)}"></div>`;
     p3 = `<div class="param"><label>Load</label><input type="text" inputmode="decimal" placeholder="—" value="${esc(saved.load||'')}" data-field="load" data-exid="${esc(ex.id)}"></div>`;
   }
-
   return `
     <div class="ex-top">
       <div class="ex-name-wrap">
@@ -629,45 +725,48 @@ function renderExInner(ex, week, weekIdx){
     </div>
     <div class="params">
       <div class="param"><label>Sets</label><input type="number" inputmode="numeric" placeholder="—" value="${esc(saved.sets||'')}" data-field="sets" data-exid="${esc(ex.id)}"></div>
-      ${p2}
-      ${p3}
+      ${p2}${p3}
       <div class="param"><label>Rest (s)</label><input type="number" inputmode="numeric" placeholder="—" value="${esc(saved.rest||'')}" data-field="rest" data-exid="${esc(ex.id)}"></div>
     </div>
     <div class="note-row"><textarea rows="1" placeholder="Notes..." data-field="note" data-exid="${esc(ex.id)}">${esc(saved.note||'')}</textarea></div>`;
 }
 
 /* ═══════════════════════════════════════════
-   SAVE / CLEAR
+   AUTOSAVE ON BLUR — writes only the single
+   exercise entry (or the day note) that changed.
 ═══════════════════════════════════════════ */
-function collectAll(){
-  const data={};
-  document.querySelectorAll('[data-exid][data-field]').forEach(el=>{
-    const id=el.dataset.exid, f=el.dataset.field;
-    if (!data[id]) data[id]={};
-    data[id][f]=el.value;
-  });
-  return data;
+function flashSaved(el){
+  el.classList.add('just-saved');
+  clearTimeout(el._flashT);
+  el._flashT=setTimeout(()=>el.classList.remove('just-saved'),700);
 }
 
-function saveCurrentDay(silent=false){
-  if (!activeDay||!ui.activePlan) return;
-  const w=ui.activeWeek;
-  const data=collectAll();
-  for (const [exId, vals] of Object.entries(data)){
-    const k=dk(ui.activePlan, activeDay.id, w, exId);
-    diary[k]={...(diary[k]||{}), ...vals};
+function handleFieldBlur(e){
+  const t=e.target;
+  if (!t.dataset) return;
+  if (t.dataset.daynote!==undefined){
+    if (!activeDay||!ui.activePlan) return;
+    writeNote(ui.activePlan, activeDay.id, ui.activeWeek, t.value);
+    flashSaved(t);
+    return;
   }
-  saveJSON(S_DIARY, diary);
-  if (!silent) toast('Saved');
+  if (!t.dataset.exid || !t.dataset.field) return;
+  if (!activeDay||!ui.activePlan) return;
+  const exId=t.dataset.exid;
+  const fields=document.querySelectorAll(`[data-exid="${CSS.escape(exId)}"]`);
+  const data={};
+  fields.forEach(el=>{ data[el.dataset.field]=el.value; });
+  writeEntry(ui.activePlan, activeDay.id, ui.activeWeek, exId, data);
+  flashSaved(t);
 }
+document.getElementById('main-inner').addEventListener('focusout', handleFieldBlur);
 
 function clearDay(){
   if (!activeDay||!confirm('Reset this day (current week) back to the prescribed values?')) return;
   const w=ui.activeWeek;
   for (const section of (activeDay.sections||[])){
     for (const ex of (section.exercises||[])){
-      const k=dk(ui.activePlan, activeDay.id, w, ex.id);
-      delete diary[k];
+      localStorage.removeItem(entryKey(ui.activePlan, activeDay.id, w, ex.id));
     }
   }
   writePresets(activePlan);
@@ -676,40 +775,56 @@ function clearDay(){
 }
 
 function switchWeek(w){
-  saveCurrentDay(true);
   ui.activeWeek=w;
   saveJSON(S_UI, ui);
   renderDay();
 }
 
 /* ═══════════════════════════════════════════
-   EXPORT / IMPORT
+   EXPORT
 ═══════════════════════════════════════════ */
 function exportDiary(){
-  saveCurrentDay(true);
+  const plansOut={};
+  for (const id of loadPlanOrder()){
+    const raw=localStorage.getItem(planKey(id));
+    if (raw){ try{ plansOut[id]=JSON.parse(raw); }catch(e){} }
+  }
+  const diaryOut = getAllByPrefixJSON(P_ENTRY);
+  const doneRaw  = getAllByPrefixRaw(P_DONE);
+  const doneOut  = {};
+  for (const k of Object.keys(doneRaw)) doneOut[k]=true;
+  const dayNotesOut = getAllByPrefixRaw(P_NOTE);
+
   const instructionsForAI = {
-    purpose: "This file is a workout diary exported from TrainLog. It contains the training plan(s) as originally prescribed, plus the actual values the athlete logged for each session. Read this block fully before interpreting the data below.",
+    purpose: "This file is a workout diary exported from TrainLog. It contains the training plan(s) as originally prescribed, plus the actual values the athlete logged for each session. Read this block fully before interpreting the data below. This same JSON shape is used both for plan-only files (just 'plans' populated) and full diary exports (everything populated) — a plan-only file can be pasted/loaded back in as-is to add that plan to the athlete's collection.",
     structure: {
-      plans: "Dictionary of loaded plans keyed by plan id. Each plan has phases > days > sections > exercises with the PRESCRIBED programming: weekSets/weekReps/weekLoad/pyramidStart/weekTarget are arrays indexed by week number (array index 0 = week 1, index 5 = week 6, etc). 'rest' is a human-readable duration string like \"2'30\\\"\" meaning 2 minutes 30 seconds, or \"30\\\"\" meaning 30 seconds.",
-      diary: "Actual logged entries, keyed as 'planId||dayId||wWEEKNUM||exerciseId' (e.g. 'plan_123||A_mon||w3||pullups_weighted_mon' = week 3 entry for that exercise on that day of that plan). Each entry reflects what the athlete ACTUALLY did that session, which may differ from the plan's prescribed values — always compare diary values against the matching plan values for that same week to assess adherence, overreach, or underperformance.",
-      done: "Keyed like diary entries but without the exercise id ('planId||dayId||wWEEKNUM'). A value of true means the athlete marked that week's session for that day as completed. Absence of a key, or false, means not marked complete — this does NOT necessarily mean the session wasn't done, just that it wasn't checked off."
+      plans: "Dictionary of loaded plans keyed by plan id. Each plan has phases > days > sections > exercises with the PRESCRIBED programming: weekSets/weekReps/weekLoad/pyramidStart/weekTarget are arrays indexed by week number (array index 0 = week 1). 'rest' is a human-readable duration string like \"2'30\\\"\" meaning 2 minutes 30 seconds, or \"30\\\"\" meaning 30 seconds.",
+      diary: "Actual logged entries, keyed as 'planId||dayId||wWEEKNUM||exerciseId'. Each entry reflects what the athlete ACTUALLY did that session, which may differ from the plan's prescribed values — always compare diary values against the matching plan values for that same week to assess adherence, overreach, or underperformance.",
+      done: "Keyed like diary entries but without the exercise id ('planId||dayId||wWEEKNUM'). true means the athlete marked that week's session for that day as completed. Absence of a key means not marked complete — this does NOT necessarily mean the session wasn't done, just that it wasn't checked off.",
+      dayNotes: "Keyed like 'done' ('planId||dayId||wWEEKNUM'). Free-text general note the athlete wrote for that whole day/week session — overall impressions, deviations from the plan, extra work done. This is separate from the per-exercise 'note' field inside each diary entry."
     },
     fieldMeanings: {
       sets: "Number of sets actually performed.",
       reps: "Reps actually performed for standard exercises. For ISOMETRIC exercises (isometric:true in the plan) this field is HOLD TIME IN SECONDS, not a rep count. The text 'AMRAP-2' means as many reps as possible minus a 2-rep buffer — treat it as a training instruction, not a number to do further math on. For PYRAMID-scheme exercises (repsScheme:'pyramid' in the plan) this field is the STARTING rep count of the first set only.",
       increment: "Only present on pyramid-scheme exercises: how many reps are added on each subsequent set. Example: sets=4, reps(start)=8, increment=2 means the four sets were roughly 8, 10, 12, 14 reps.",
-      load: "'BW' means bodyweight only, no added load. A plain number is in kilograms. Check the exercise's 'loadFormat' in the plan definition to know what the number means: 'addedKg' = extra weight added on top of bodyweight (weighted pull-ups/dips/chin-ups), 'kg' = absolute barbell load (squat, military press, row, RDL), 'kgPerHand' = dumbbell load held in each hand (Bulgarian split squat), 'bw' = always bodyweight regardless of the number shown.",
-      rest: "Rest actually taken, always in seconds regardless of exercise type, even though the plan displays it as a human-readable string like 2'30\".",
-      note: "Free-text note the athlete added for that specific exercise on that specific day/week. For log-type entries (Padel, Run, Rest day — identified by logType:true in the plan) this is the ONLY field used, since those entries have no sets/reps/load and are instead logged against a weekly qualitative target in the plan's 'weekTarget' array."
+      load: "'BW' means bodyweight only, no added load. A plain number is in kilograms. Check the exercise's 'loadFormat' in the plan definition to know what the number means: 'addedKg' = extra weight added on top of bodyweight, 'kg' = absolute barbell load, 'kgPerHand' = dumbbell load per hand, 'bw' = always bodyweight regardless of the number shown.",
+      rest: "Rest actually taken, always in seconds, even though the plan displays it as a human-readable string like 2'30\".",
+      note: "Free-text note the athlete added for that specific exercise on that specific day/week. For log-type entries (Padel, Run, Rest day — identified by logType:true in the plan) this is the ONLY field used, since those entries have no sets/reps/load and are instead logged against a qualitative weekly target in the plan's 'weekTarget' array."
+    },
+    planRevisionRules: {
+      summary: "When revising or regenerating a plan that reuses an existing plan id (e.g. updating next month's loads for the same routine), preserve each exercise's 'id' whenever that exercise's role is fundamentally unchanged. Diary entries are keyed by planId+dayId+week+exerciseId, so reusing an id automatically keeps the athlete's logged history attached to that slot; assigning a new id automatically starts that slot with no history. No special merge logic is needed beyond choosing ids correctly — the app never deletes or overwrites logged diary data when a plan is re-imported with the same plan id, it only replaces the plan's prescribed definition and fills in fresh defaults for exercise ids that don't already have logged data.",
+      keepSameId: "Keep the exercise's existing id when only its prescribed numbers change (weekSets/weekReps/weekLoad/pyramidStart/pyramidIncrement/rest/weekTarget), when it changes position within the same section, or when its name/muscle text is edited but it remains the same movement in the same day and the same section type (main lifts / finisher / circuit / log).",
+      assignNewId: "Give the exercise a new id when it is replaced by a genuinely different movement, or when it moves between section types (e.g. a lift moves from the main-lifts section into a finisher/circuit, or vice versa) — its training role changed, so it should not inherit old logged data.",
+      planIdReuse: "Reuse the same top-level plan 'id' when regenerating/updating the SAME underlying program (e.g. adjusting Phase 1's loads mid-block). Use a NEW plan id for a genuinely new program (e.g. Phase 2) so it's added alongside the existing plan rather than replacing it."
     },
     otherNotes: [
       "Empty string values ('') mean the athlete did not log that field for that session. Treat as missing data, not as zero.",
-      "The 'cat' field on each exercise (pull/push/legs/core/iso/log) is purely for color-coding the muscle group in the app UI and carries no programming meaning.",
-      "Day ids follow calendar order (Monday through Sunday) but are not necessarily named after the weekday in every plan version — always check the day's 'label' field for the human-readable name.",
+      "The 'cat' field on each exercise is purely for color-coding the muscle group in the app UI and carries no programming meaning.",
       "When asked to review progress or adjust the plan, compare each diary entry to its corresponding plan entry for the same week number, not just to the previous week's diary entry."
     ]
   };
-  const exp={instructionsForAI, v:6, ts:Date.now(), plans, diary, done};
+
+  const exp={instructionsForAI, v:7, ts:Date.now(), plans:plansOut, diary:diaryOut, done:doneOut, dayNotes:dayNotesOut};
   const blob=new Blob([JSON.stringify(exp,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -718,23 +833,7 @@ function exportDiary(){
   toast('Exported');
 }
 
-function importDiary(e){
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{
-      const p=JSON.parse(ev.target.result);
-      if (p.plans) { plans={...plans,...p.plans}; saveJSON(S_PLANS,plans); }
-      if (p.diary) { diary={...diary,...p.diary}; saveJSON(S_DIARY,diary); }
-      if (p.done)  { done={...done,...p.done};   saveJSON(S_DONE,done); }
-      loadState();
-      toast('Imported');
-    }catch(e){ toast('Could not read that file'); }
-  };
-  r.readAsText(f);
-  e.target.value='';
-}
-
+bootLoadPlans();
 loadState();
 </script>
 </body>

@@ -1,4 +1,4 @@
-const CACHE = "trnlog-v0.1";
+const CACHE = "trnlog-v0.2";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((cache) => cache.add("/")));
